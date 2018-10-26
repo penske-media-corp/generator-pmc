@@ -1,0 +1,17 @@
+session_name: generator-pmc
+start_directory: ./
+
+windows:
+  - window_name: editor
+    start_directory: ./
+    focus: True
+    layout: main-vertical
+    options:
+      other-pane-width: 90
+    panes:
+      - pane:
+        shell_command: vim .
+        focus: true
+      - pane:
+        shell_command: nvm use && npm install
+      - null
