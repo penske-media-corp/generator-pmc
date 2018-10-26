@@ -1,0 +1,35 @@
+pipelines:
+  default:
+<% if (hasBuildProcess) { %>
+  - step:
+      name: Build
+      image:
+        name: penskemediacorporation/pipeline-build
+        username: $DOCKERHUB_PIPELINE_USERNAME
+        password: $DOCKERHUB_PIPELINE_PASSWORD
+      script:
+        - source /usr/local/bin/start.sh --build=<%= buildCommand %> <% if (textDomain) { %>--domain=<%= textDomain %><% } %>
+      artifacts:
+        - <%= buildCompiled %>
+      caches:
+        - composer
+        - node
+<% } %>
+  - step:
+      name: Test
+      image:
+        name: penskemediacorporation/pipeline-test
+        username: $DOCKERHUB_PIPELINE_USERNAME
+        password: $DOCKERHUB_PIPELINE_PASSWORD
+      script:
+        - source /usr/local/bin/start.sh && pmc-ci-tests <% if (hasBuildProcess) { %>--phpunit<% } %> --eslint --phpcs --phplint --diff <% if (textDomain) { %>--l10n --domain=<%= textDomain %><% } %>
+<% if (hasSvn) { %>
+  - step:
+      name: Deploy to SVN
+      trigger: manual
+      image:
+        name: penskemediacorporation/pipeline-deploy
+        username: $DOCKERHUB_PIPELINE_USERNAME
+        password: $DOCKERHUB_PIPELINE_PASSWORD
+      script: echo 'runs nothing'
+<% } %>

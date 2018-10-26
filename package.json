@@ -1,0 +1,33 @@
+{
+	"name": "generator-pmc",
+	"version": "0.0.0",
+	"description": "General purpose generator for PMC",
+	"files": [
+		"generators/app"
+	],
+	"keywords": [
+		"yeoman-generator",
+		"vscode",
+		"docker",
+		"extensions",
+		"visual studio",
+		"docker compose"
+	],
+	"license": "GPL-3.0",
+	"author": {
+		"name": "PMC, Penske Media Corporation, bcamenisch <bcamenisch@pmc.com>",
+		"url": "https://pmc.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@bitbucket.org/penskemediacorp/generator-pmc.git"
+	},
+	"dependencies": {
+		"chalk": "^1.0.0",
+		"configstore": "^1.3.0",
+		"node-uuid": "^1.4.7",
+		"process": "^0.11.2",
+		"yeoman-generator": "^0.19.0",
+		"yosay": "^1.0.2"
+	}
+}
