@@ -1,8 +1,8 @@
 'use strict'
 
-var os         = require('os');
-var path       = require('path');
-var process    = require('process');
+var os  = require('os');
+var path = require('path');
+var process = require('process');
 var BaseHelper = require('../baseHelper.js');
 
 var PipelinesHelper = function () {}

@@ -1,0 +1,84 @@
+version: "3"
+
+services:
+  wordpress:
+    build:
+      context: "."
+      dockerfile: Dockerfile-dev
+    environment:
+      HTTPS_METHOD: "nohttps"
+      VIRTUAL_HOST: "<%= wpDomain %>"
+      WORDPRESS_DB_HOST: "mysql"
+      WORDPRESS_DB_NAME: "wordpress"
+      WORDPRESS_DB_PASSWORD: ""
+      WORDPRESS_DB_USER: "root"
+    depends_on:
+      - "mysql"
+    networks:
+      - "front"
+      - "back"
+    volumes:
+      - "./client-mu-plugins:<%= wpDir %>/wp-content/client-mu-plugins"
+      - "./conf/conf-server/php-local.ini:/usr/local/etc/php/conf.d/local.ini:ro"
+      - "./conf/conf-server/wp-local-config.php:/usr/local/etc/php/autoprepend.php:ro"
+      - "./images:<%= wpDir %>/wp-content/images"
+      - "./languages:<%= wpDir %>/wp-content/languages"
+      - "./plugins:<%= wpDir %>/wp-content/plugins"
+      - "./private:<%= wpDir %>/wp-content/private"
+      - "./themes:<%= wpDir %>/wp-content/themes"
+      - "./vendor/Automattic/vip-go-mu-plugins-built:<%= wpDir %>/wp-content/mu-plugins"
+      - "./vip-config/vip-config.php:<%= wpDir %>/vip-config.php:ro"
+      - "wp:<%= wpDir %>:rw"
+  wp-cli:
+    image: "wordpress:cli-php<%= phpVersion %>"
+    depends_on:
+      - "mysql"
+    networks:
+      - "back"
+    volumes:
+      - "./client-mu-plugins:<%= wpDir %>/wp-content/client-mu-plugins"
+      - "./conf/bin/install-wp.sh:/usr/local/bin/install-wp:ro"
+      - "./conf/conf-server/php-local.ini:/usr/local/etc/php/conf.d/local.ini:ro"
+      - "./conf/conf-server/wp-local-config.php:/usr/local/etc/php/autoprepend.php:ro"
+      - "./images:<%= wpDir %>/wp-content/images"
+      - "./languages:<%= wpDir %>/wp-content/languages"
+      - "./plugins:<%= wpDir %>/wp-content/plugins"
+      - "./private:<%= wpDir %>/wp-content/private"
+      - "./themes:<%= wpDir %>/wp-content/themes"
+      - "./vendor/Automattic/vip-go-mu-plugins-built:<%= wpDir %>/wp-content/mu-plugins"
+      - "./vip-config/vip-config.php:<%= wpDir %>/vip-config.php:ro"
+      - "wp:<%= wpDir %>:rw"
+  photon:
+    image: "chriszarate/photon:latest"
+    networks:
+      - "front"
+  mysql:
+    image: "mariadb:10.2"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "wordpress"
+      MYSQL_ROOT_PASSWORD: ""
+    networks:
+      - "back"
+  proxy:
+    image: "jwilder/nginx-proxy:alpine"
+    environment:
+      HSTS: "off"
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      front:
+        aliases:
+          - "<%= wpDomain %>"
+    volumes:
+      - "./conf/conf-server/nginx-proxy-wordpress.conf:/etc/nginx/vhost.d/<%= wpDomain %>_location:ro"
+      - "./conf/conf-server/nginx-proxy.conf:/etc/nginx/conf.d/proxy.conf:ro"
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+
+networks:
+  front: {}
+  back: {}
+
+volumes:
+  wp: {}
