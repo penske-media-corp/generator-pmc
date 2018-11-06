@@ -13,7 +13,6 @@
 	"require": {
 		"Automattic/vip-go-mu-plugins-built": "*",
 		"composer/installers": "~1.0",
-		"tollmanz/wordpress-pecl-memcached-object-cache": "*",
 		"wpackagist-plugin/pmc-plugins":">=1.0",
 		"wpackagist-theme/pmc-core-v2":">=1.0"
 	},
@@ -30,19 +29,6 @@
 					"type": "vcs",
 					"source": {
 							"url": "git@github.com:Automattic/vip-go-mu-plugins-built.git",
-							"type": "git",
-							"reference": "origin/master"
-					}
-			}
-		},
-		{
-			"type": "package",
-			"package": {
-					"name": "tollmanz/wordpress-pecl-memcached-object-cache",
-					"version": "1.0",
-					"type": "vcs",
-					"source": {
-							"url": "git@github.com:tollmanz/wordpress-pecl-memcached-object-cache.git",
 							"type": "git",
 							"reference": "origin/master"
 					}

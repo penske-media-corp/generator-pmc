@@ -2,79 +2,55 @@ version: "3"
 
 services:
   wordpress:
-    build:
-      context: "."
-      dockerfile: Dockerfile-dev
+    image: penskemediacorporation/vipgo
     environment:
-      HTTPS_METHOD: "nohttps"
-      VIRTUAL_HOST: "<%= wpDomain %>"
-      WORDPRESS_DB_HOST: "mysql"
-      WORDPRESS_DB_NAME: "wordpress"
-      WORDPRESS_DB_PASSWORD: ""
-      WORDPRESS_DB_USER: "root"
+      - FPM_MAX_CHILDREN=50
+      - FPM_MEM_LIMIT=512M
+      - FPM_POST_MAX_SIZE=128M
+      - FPM_UPLOAD_MAX_FILESIZE=128M
+      - JETPACK_DEV_DEBUG=true
+      - MEMCACHE=no
     depends_on:
       - "mysql"
+    ports:
+      - 80:80
     networks:
       - "front"
       - "back"
     volumes:
       - "./client-mu-plugins:<%= wpDir %>/wp-content/client-mu-plugins"
-      - "./conf/conf-server/php-local.ini:/usr/local/etc/php/conf.d/local.ini:ro"
-      - "./conf/conf-server/wp-local-config.php:/usr/local/etc/php/autoprepend.php:ro"
       - "./images:<%= wpDir %>/wp-content/images"
       - "./languages:<%= wpDir %>/wp-content/languages"
       - "./plugins:<%= wpDir %>/wp-content/plugins"
       - "./private:<%= wpDir %>/wp-content/private"
       - "./themes:<%= wpDir %>/wp-content/themes"
       - "./vendor/Automattic/vip-go-mu-plugins-built:<%= wpDir %>/wp-content/mu-plugins"
-      - "./vip-config/vip-config.php:<%= wpDir %>/vip-config.php:ro"
       - "wp:<%= wpDir %>:rw"
-  wp-cli:
-    image: "wordpress:cli-php<%= phpVersion %>"
-    depends_on:
-      - "mysql"
-    networks:
-      - "back"
-    volumes:
-      - "./client-mu-plugins:<%= wpDir %>/wp-content/client-mu-plugins"
-      - "./conf/bin/install-wp.sh:/usr/local/bin/install-wp:ro"
-      - "./conf/conf-server/php-local.ini:/usr/local/etc/php/conf.d/local.ini:ro"
-      - "./conf/conf-server/wp-local-config.php:/usr/local/etc/php/autoprepend.php:ro"
-      - "./images:<%= wpDir %>/wp-content/images"
-      - "./languages:<%= wpDir %>/wp-content/languages"
-      - "./plugins:<%= wpDir %>/wp-content/plugins"
-      - "./private:<%= wpDir %>/wp-content/private"
-      - "./themes:<%= wpDir %>/wp-content/themes"
-      - "./vendor/Automattic/vip-go-mu-plugins-built:<%= wpDir %>/wp-content/mu-plugins"
-      - "./vip-config/vip-config.php:<%= wpDir %>/vip-config.php:ro"
-      - "wp:<%= wpDir %>:rw"
-  photon:
-    image: "chriszarate/photon:latest"
-    networks:
-      - "front"
   mysql:
-    image: "mariadb:10.2"
+    image: "mariadb"
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: "wordpress"
       MYSQL_ROOT_PASSWORD: ""
     networks:
       - "back"
-  proxy:
-    image: "jwilder/nginx-proxy:alpine"
-    environment:
-      HSTS: "off"
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      front:
-        aliases:
-          - "<%= wpDomain %>"
+<% if (provisioner) { %>
+  provision:
+    image: penskemediacorporation/provision
+    container_name: provision
     volumes:
-      - "./conf/conf-server/nginx-proxy-wordpress.conf:/etc/nginx/vhost.d/<%= wpDomain %>_location:ro"
-      - "./conf/conf-server/nginx-proxy.conf:/etc/nginx/conf.d/proxy.conf:ro"
-      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - ~/.ssh:/host/.ssh
+      - wp:<%= wpDir %>/wp-content
+    command:
+      - wpsite
+      - --theme=<%= wpTheme %>
+      - --title=<%= wpTitle %>
+      - --domain=<%= wpDomain %>
+      - --run=wp --allow-root --info
+    depends_on:
+      - mysql
+      - wordpress
+<% } %>
 
 networks:
   front: {}

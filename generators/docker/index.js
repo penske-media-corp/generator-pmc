@@ -12,60 +12,37 @@ var DockerHelper = require('./dockerHelper.js');
 
 // General
 var error = false;
-var isMultisite = false;
-var phpUnitVersion = '';
-var phpVersion = '';
-var wpDir = '';
+var provisioner = false;
+var wpDir = '/var/www/html';
 var wpDomain = '';
 var wpEmail = '';
 var wpEnvironment = '';
 var wpSlug = '';
+var wpTheme = '';
 var wpTitle = '';
 var wpUserName = '';
 var wpUserPass = '';
-var wpVersion = '';
 
 function showPrompts() {
 	var done = this.async();
 	var prompts = [{
 		type: 'list',
 		name: 'wpEnvironment',
-		message: 'What type of WP environment are you using?',
+		message: 'WP environment?',
 		choices: [{
 			name: 'WP VIP Go',
 			value: 'wpVipGo'
-		}, {
-			name: 'WP VIP Classic',
-			value: 'wpVipClassic'
-		}, {
-			name: 'WP Self Hosted',
-			value: 'wpSelfHosted'
 		}]
-		}, {
-			type: 'confirm',
-			name: 'isMultisite',
-			message: 'Is this a multisite install?',
-			default: false
-		}, {
-			type: 'input',
-			name: 'wpVersion',
-			message: 'What version of WP are you using?',
-			default: '4.9.8'
-		}, {
-			type: 'input',
-			name: 'phpVersion',
-			message: 'What version of PHP are you using?',
-			default: '7.2'
-		}, {
-			type: 'input',
-			name: 'phpUnitVersion',
-			message: 'What version of PHPUnit are you using?',
-			default: '6.5.7'
 		}, {
 			type: 'input',
 			name: 'wpDomain',
 			message: 'Default WP dev domain?',
 			default: 'pmcdev.local'
+		}, {
+			type: 'input',
+			name: 'wpTheme',
+			message: 'Default WP theme?',
+			default: process.cwd().split(path.sep).pop().toLowerCase()
 		}, {
 			type: 'input',
 			name: 'wpTitle',
@@ -92,25 +69,22 @@ function showPrompts() {
 			message: 'Default WP pass?',
 			default: 'wp'
 		}, {
-			type: 'input',
-			name: 'wpDir',
-			message: 'Default web dir?',
-			default: '/var/www/html'
+			type: 'confirm',
+			name: 'provisioner',
+			message: 'Does this use the provisioner container?',
+			default: ''
 	}];
 
 	this.prompt(prompts, function (props) {
-		isMultisite = props.isMultisite;
-		phpUnitVersion = props.phpUnitVersion;
-		phpVersion = props.phpVersion;
-		wpDir = props.wpDir;
+		provisioner = props.provisioner;
 		wpDomain = props.wpDomain;
 		wpEmail = props.wpEmail;
 		wpEnvironment = props.wpEnvironment;
 		wpSlug = props.wpSlug;
+		wpTheme = props.wpTheme;
 		wpTitle = props.wpTitle;
 		wpUserName = props.wpUserName;
 		wpUserPass = props.wpUserPass;
-		wpVersion = props.wpVersion;
 		done();
 	}.bind(this));
 }
@@ -118,18 +92,16 @@ function showPrompts() {
 
 function getDefaultTemplateData() {
 	return {
-		isMultisite: isMultisite,
-		phpUnitVersion: phpUnitVersion,
-		phpVersion: phpVersion,
+		provisioner: provisioner,
 		wpDir: wpDir,
 		wpDomain: wpDomain,
 		wpEmail: wpEmail,
 		wpEnvironment: wpEnvironment,
 		wpSlug: wpSlug,
+		wpTheme: wpTheme,
 		wpTitle: wpTitle,
 		wpUserName: wpUserName,
-		wpUserPass: wpUserPass,
-		wpVersion: wpVersion
+		wpUserPass: wpUserPass
 	};
 }
 
