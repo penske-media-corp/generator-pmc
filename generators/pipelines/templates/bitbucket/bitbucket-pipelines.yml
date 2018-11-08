@@ -20,15 +20,24 @@ pipelines:
         username: $DOCKERHUB_PIPELINE_USERNAME
         password: $DOCKERHUB_PIPELINE_PASSWORD
       script:
-        - source /usr/local/bin/start.sh && pmc-ci-tests <% if (hasPhpUnit) { %>--phpunit<% } %> --eslint --phpcs --phplint --diff <% if (textDomain) { %>--l10n --domain=<%= textDomain %><% } %>
-  master:
-  <% if (hasSvn) { %>- step:
-      name: Deploy to VIP SVN
-      deployment: production
-      trigger: manual
-      image:
-        name: penskemediacorporation/pipeline-deploy
-        username: $DOCKERHUB_PIPELINE_USERNAME
-        password: $DOCKERHUB_PIPELINE_PASSWORD
-      script:
-        - source /usr/local/bin/start.sh<% } %>
+        - source /usr/local/bin/start.sh && pmc-ci-tests <% if (hasPhpUnit) { %>--phpunit --codecov<% } %> --eslint --phpcs --phplint --diff <% if (textDomain) { %>--l10n --domain=<%= textDomain %><% } %>
+  branches:
+    master:
+    - step:
+        name: Test
+        image:
+          name: penskemediacorporation/pipeline-test
+          username: $DOCKERHUB_PIPELINE_USERNAME
+          password: $DOCKERHUB_PIPELINE_PASSWORD
+        script:
+          - source /usr/local/bin/start.sh && pmc-ci-tests <% if (hasPhpUnit) { %>--phpunit --codecov<% } %> --eslint --phpcs --phplint --diff <% if (textDomain) { %>--l10n --domain=<%= textDomain %><% } %>
+    <% if (hasSvn) { %>- step:
+        name: Deploy to VIP SVN
+        deployment: production
+        trigger: manual
+        image:
+          name: penskemediacorporation/pipeline-deploy
+          username: $DOCKERHUB_PIPELINE_USERNAME
+          password: $DOCKERHUB_PIPELINE_PASSWORD
+        script:
+          - source /usr/local/bin/start.sh<% } %>
