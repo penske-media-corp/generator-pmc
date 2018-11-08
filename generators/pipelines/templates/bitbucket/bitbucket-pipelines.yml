@@ -1,7 +1,6 @@
 pipelines:
   default:
-<% if (hasBuildProcess) { %>
-  - step:
+  <% if (hasBuildProcess) { %>- step:
       name: Build
       image:
         name: penskemediacorporation/pipeline-build
@@ -13,8 +12,7 @@ pipelines:
         - <%= buildCompiled %>
       caches:
         - composer
-        - node
-<% } %>
+        - node<% } %>
   - step:
       name: Test
       image:
@@ -22,15 +20,14 @@ pipelines:
         username: $DOCKERHUB_PIPELINE_USERNAME
         password: $DOCKERHUB_PIPELINE_PASSWORD
       script:
-        - source /usr/local/bin/start.sh && pmc-ci-tests <% if (hasBuildProcess) { %>--phpunit<% } %> --eslint --phpcs --phplint --diff <% if (textDomain) { %>--l10n --domain=<%= textDomain %><% } %>
-<% if (hasSvn) { %>- step:
+        - source /usr/local/bin/start.sh && pmc-ci-tests <% if (hasPhpUnit) { %>--phpunit<% } %> --eslint --phpcs --phplint --diff <% if (textDomain) { %>--l10n --domain=<%= textDomain %><% } %>
+  <% if (hasSvn) { %>- step:
       name: Deploy to VIP SVN
-			deployment: wpcom-svn-production
+      deployment: production
       trigger: manual
       image:
         name: penskemediacorporation/pipeline-deploy
         username: $DOCKERHUB_PIPELINE_USERNAME
         password: $DOCKERHUB_PIPELINE_PASSWORD
       script:
-        source /usr/local/bin/start.sh
-<% } %>
+        - source /usr/local/bin/start.sh<% } %>
