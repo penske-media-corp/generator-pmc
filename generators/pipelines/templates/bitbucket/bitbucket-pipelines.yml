@@ -21,6 +21,7 @@ pipelines:
         password: $DOCKERHUB_PIPELINE_PASSWORD
       script:
         - source /usr/local/bin/start.sh && pmc-ci-tests <% if (hasPhpUnit) { %>--phpunit<% } %> --eslint --phpcs --phplint --diff <% if (textDomain) { %>--l10n --domain=<%= textDomain %><% } %>
+  master:
   <% if (hasSvn) { %>- step:
       name: Deploy to VIP SVN
       deployment: production
