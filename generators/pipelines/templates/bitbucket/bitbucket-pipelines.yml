@@ -23,9 +23,8 @@ pipelines:
         password: $DOCKERHUB_PIPELINE_PASSWORD
       script:
         - source /usr/local/bin/start.sh && pmc-ci-tests <% if (hasBuildProcess) { %>--phpunit<% } %> --eslint --phpcs --phplint --diff <% if (textDomain) { %>--l10n --domain=<%= textDomain %><% } %>
-<% if (hasSvn) { %>
-  - step:
-      name: Deploy to SVN
+<% if (hasSvn) { %>- step:
+      name: Deploy to VIP SVN
 			deployment: wpcom-svn-production
       trigger: manual
       image:
