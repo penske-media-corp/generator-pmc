@@ -26,10 +26,12 @@ pipelines:
 <% if (hasSvn) { %>
   - step:
       name: Deploy to SVN
+			deployment: wpcom-svn-production
       trigger: manual
       image:
         name: penskemediacorporation/pipeline-deploy
         username: $DOCKERHUB_PIPELINE_USERNAME
         password: $DOCKERHUB_PIPELINE_PASSWORD
-      script: echo 'runs nothing'
+      script:
+        source /usr/local/bin/start.sh
 <% } %>
