@@ -1,0 +1,60 @@
+version: "3"
+
+services:
+  wordpress:
+    image: penskemediacorporation/vipgo
+    environment:
+      - FPM_MAX_CHILDREN=50
+      - FPM_MEM_LIMIT=512M
+      - FPM_POST_MAX_SIZE=128M
+      - FPM_UPLOAD_MAX_FILESIZE=128M
+      - JETPACK_DEV_DEBUG=true
+      - MEMCACHE=no
+    depends_on:
+      - "mysql"
+    ports:
+      - 80:80
+    networks:
+      - "front"
+      - "back"
+    volumes:
+      - "./client-mu-plugins:<%= wpDir %>/wp-content/client-mu-plugins"
+      - "./images:<%= wpDir %>/wp-content/images"
+      - "./languages:<%= wpDir %>/wp-content/languages"
+      - "./plugins:<%= wpDir %>/wp-content/plugins"
+      - "./private:<%= wpDir %>/wp-content/private"
+      - "./themes:<%= wpDir %>/wp-content/themes"
+      - "./vendor/Automattic/vip-go-mu-plugins-built:<%= wpDir %>/wp-content/mu-plugins"
+      - "wp:<%= wpDir %>:rw"
+  mysql:
+    image: "mariadb"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "wordpress"
+      MYSQL_ROOT_PASSWORD: ""
+    networks:
+      - "back"
+<% if (provisioner) { %>
+  provision:
+    image: penskemediacorporation/provision
+    container_name: provision
+    volumes:
+      - ~/.ssh:/host/.ssh
+      - wp:<%= wpDir %>/wp-content
+    command:
+      - wpsite
+      - --theme=<%= wpTheme %>
+      - --title=<%= wpTitle %>
+      - --domain=<%= wpDomain %>
+      - --run=wp --allow-root --info
+    depends_on:
+      - mysql
+      - wordpress
+<% } %>
+
+networks:
+  front: {}
+  back: {}
+
+volumes:
+  wp: {}

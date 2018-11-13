@@ -1,24 +1,24 @@
 'use strict';
-var chalk   = require('chalk');
-var exec    = require('child_process').exec;
-var os      = require('os');
-var path    = require('path');
+var chalk = require('chalk');
+var exec = require('child_process').exec;
+var os = require('os');
+var path = require('path');
 var process = require('process');
-var uuid    = require('node-uuid');
-var yeoman  = require('yeoman-generator');
-var yosay   = require('yosay');
+var uuid = require('node-uuid');
+var yeoman = require('yeoman-generator');
+var yosay = require('yosay');
 
 var PipelinesHelper = require('./pipelinesHelper.js');
 
 // General
-var buildCommand    = '';
-var buildCompiled   = '';
-var ciProvider      = '';
-var error           = false;
+var buildCommand = '';
+var buildCompiled = '';
+var ciProvider = '';
+var error = false;
 var hasBuildProcess = false;
-var hasPhpUnit      = false;
-var hasSvn          = false;
-var textDomain      = '';
+var hasPhpUnit = false;
+var hasSvn = false;
+var textDomain = '';
 
 function showPrompts() {
 	var done = this.async();
@@ -69,27 +69,25 @@ function showPrompts() {
 		type: 'confirm',
 		name: 'hasSvn',
 		message: 'Does this project deploy to SVN',
-		default: function (answers) {
-			return false;
-		}
+		default: false
 	}];
 
 	this.prompt(prompts, function (props) {
-		ciProvider       = props.ciProvider;
-		buildCommand     = props.buildCommand;
-		buildCompiled    = props.buildCompiled;
-		hasBuildProcess  = props.hasBuildProcess;
-		hasPhpUnit       = props.hasPhpUnit;
-		hasSvn           = props.hasSvn;
-		textDomain       = props.textDomain;
+		ciProvider = props.ciProvider;
+		buildCommand = props.buildCommand;
+		buildCompiled = props.buildCompiled;
+		hasBuildProcess = props.hasBuildProcess;
+		hasPhpUnit = props.hasPhpUnit;
+		hasSvn = props.hasSvn;
+		textDomain = props.textDomain;
 		done();
 	}.bind(this));
 }
 
 function handlePipeline(yo) {
-	var pipelines    = new PipelinesHelper();
-	var done         = yo.async();
-	var updateFiles  = function() { done(); }
+	var pipelines = new PipelinesHelper();
+	var done = yo.async();
+	var updateFiles = function() { done(); }
 	var templateData = getDefaultTemplateData();
 
 	handleCommmonTemplates(yo, pipelines, templateData, updateFiles.bind(yo));

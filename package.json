@@ -6,12 +6,11 @@
 		"generators/app"
 	],
 	"keywords": [
-		"yeoman-generator",
-		"vscode",
+		"docker compose",
 		"docker",
-		"extensions",
-		"visual studio",
-		"docker compose"
+		"pipelines",
+		"pmc",
+		"yeoman-generator"
 	],
 	"license": "GPL-3.0",
 	"author": {
