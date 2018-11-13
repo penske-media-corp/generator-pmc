@@ -68,7 +68,7 @@ function showPrompts() {
 	}, {
 		type: 'confirm',
 		name: 'hasSvn',
-		message: 'Does this project deploy to SVN',
+		message: 'Does this project deploy to SVN?',
 		default: false
 	}];
 
