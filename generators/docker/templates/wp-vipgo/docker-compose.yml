@@ -1,31 +1,28 @@
 version: "3"
 
 services:
+
   wordpress:
-    image: penskemediacorporation/vipgo
-    environment:
-      - FPM_MAX_CHILDREN=50
-      - FPM_MEM_LIMIT=512M
-      - FPM_POST_MAX_SIZE=128M
-      - FPM_UPLOAD_MAX_FILESIZE=128M
-      - JETPACK_DEV_DEBUG=true
-      - MEMCACHE=no
-    depends_on:
-      - "mysql"
+    image: penskemediacorporation/wpserver
+    working_dir: <%= wpDir %>/wp-content/themes/<%= wpTheme %>
     ports:
       - 80:80
+    depends_on:
+      - "mysql"
     networks:
       - "front"
       - "back"
     volumes:
-      - "./client-mu-plugins:<%= wpDir %>/wp-content/client-mu-plugins"
-      - "./images:<%= wpDir %>/wp-content/images"
-      - "./languages:<%= wpDir %>/wp-content/languages"
-      - "./plugins:<%= wpDir %>/wp-content/plugins"
-      - "./private:<%= wpDir %>/wp-content/private"
-      - "./themes:<%= wpDir %>/wp-content/themes"
-      - "./vendor/Automattic/vip-go-mu-plugins-built:<%= wpDir %>/wp-content/mu-plugins"
-      - "wp:<%= wpDir %>:rw"
+      - "./.cache/images:<%= wpDir %>/wp-content/images"
+      - "./.cache/languages:<%= wpDir %>/wp-content/languages"
+      - "./.cache/private:<%= wpDir %>/wp-content/private"
+      - "./.cache/uploads:<%= wpDir %>/wp-content/uploads"
+      - "./.cache/wp:<%= wpDir %>:rw"
+      - "./:<%= wpDir %>/wp-content/themes/<%= wpTheme %>:rw"
+      - "./vendor/pmc/mu-plugins:<%= wpDir %>/wp-content/mu-plugins"
+      - "./vendor/pmc/plugins:<%= wpDir %>/wp-content/plugins:rw"
+      <% if(wpHasCoreV2) { %>- "./vendor/pmc/themes/vip/pmc-core-v2:<%= wpDir %>/wp-content/themes/vip/pmc-core-v2"<% } %>
+
   mysql:
     image: "mariadb"
     environment:
@@ -34,27 +31,38 @@ services:
       MYSQL_ROOT_PASSWORD: ""
     networks:
       - "back"
-<% if (provisioner) { %>
-  provision:
-    image: penskemediacorporation/provision
-    container_name: provision
+
+  pipeline-build:
+    image: penskemediacorporation/pipeline-build:v2
+    working_dir: <%= wpDir %>/wp-content/themes/<%= wpTheme %>
+    env_file: .env
     volumes:
-      - ~/.ssh:/host/.ssh
-      - wp:<%= wpDir %>/wp-content
-    command:
-      - wpsite
-      - --theme=<%= wpTheme %>
-      - --title=<%= wpTitle %>
-      - --domain=<%= wpDomain %>
-      - --run=wp --allow-root --info
+      - "./.cache/wp:<%= wpDir %>:rw"
+      - "./:<%= wpDir %>/wp-content/themes/<%= wpTheme %>:rw"
+      - "./confd-configs:/etc/confd"
+      - "./vendor/pmc/mu-plugins:<%= wpDir %>/wp-content/mu-plugins"
+      - "./vendor/pmc/plugins:<%= wpDir %>/wp-content/plugins:rw"
+      <% if(wpHasCoreV2) { %>- "./vendor/pmc/themes/vip/pmc-core-v2:<%= wpDir %>/wp-content/themes/vip/pmc-core-v2"<% } %>
+    networks:
+      - "back"
     depends_on:
       - mysql
-      - wordpress
-<% } %>
+
+  pipeline-test:
+    image: penskemediacorporation/pipeline-test:v2
+    working_dir: <%= wpDir %>/wp-content/themes/<%= wpTheme %>
+    env_file: .env
+    volumes:
+      - "./.cache/wp:<%= wpDir %>:rw"
+      - "./:<%= wpDir %>/wp-content/themes/<%= wpTheme %>:rw"
+      - "./confd-configs:/etc/confd"
+      - "./vendor/pmc/mu-plugins:<%= wpDir %>/wp-content/mu-plugins"
+      - "./vendor/pmc/plugins:<%= wpDir %>/wp-content/plugins:rw"
+      <% if(wpHasCoreV2) { %>- "./vendor/pmc/themes/vip/pmc-core-v2:<%= wpDir %>/wp-content/themes/vip/pmc-core-v2"<% } %>
 
 networks:
-  front: {}
   back: {}
+  front: {}
 
 volumes:
-  wp: {}
+  mysql: {}

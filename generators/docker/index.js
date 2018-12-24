@@ -11,53 +11,100 @@ var yosay = require('yosay');
 var DockerHelper = require('./dockerHelper.js');
 
 // General
+var buildCommand = '';
+var buildCompiledDir = '';
+var buildDir = '';
 var error = false;
-var provisioner = false;
-var wpDir = '/var/www/html';
+var textDomain = '';
+var wpComposerType = '';
+var wpDbHost = '';
+var wpDbName = '';
+var wpDbPass = '';
+var wpDbUser = '';
+var wpDir = '';
 var wpDomain = '';
 var wpEmail = '';
-var wpEnvironment = '';
+var wpHasBuild = '';
+var wpHasCoreV2 = '';
+var wpHasSvnDeploy = '';
+var wpHasTests = '';
+var wpHostType = '';
 var wpSlug = '';
 var wpTheme = '';
 var wpTitle = '';
 var wpUserName = '';
 var wpUserPass = '';
+var wpVersion = '';
 
 function showPrompts() {
 	var done = this.async();
 	var prompts = [{
 		type: 'list',
-		name: 'wpEnvironment',
-		message: 'WP environment?',
+		name: 'wpHostType',
+		message: 'WP production host environment?',
 		choices: [{
 			name: 'WP VIP Go',
 			value: 'wpVipGo'
 		}]
 		}, {
+		type: 'list',
+		name: 'wpComposerType',
+		message: 'WP composer package type?',
+		choices: [{
+				name: 'Theme',
+				value: 'wordpress-theme'
+			}, {
+				name: 'Plugin',
+				value: 'wordpress-plugin'
+			}, {
+				name: 'MU plugin',
+				value: 'wordpress-mu-plugin'
+			}]
+		}, {
 			type: 'input',
 			name: 'wpDomain',
 			message: 'Default WP dev domain?',
-			default: 'pmcdev.local'
+			default: process.cwd().split(path.sep).pop().toLowerCase() + '.pmcdev.local'
+		}, {
+			type: 'input',
+			name: 'wpVersion',
+			message: 'Default WP version',
+			default: '5.0'
 		}, {
 			type: 'input',
 			name: 'wpTheme',
 			message: 'Default WP theme?',
-			default: process.cwd().split(path.sep).pop().toLowerCase()
+			default: 'vip/' + process.cwd().split(path.sep).pop().toLowerCase()
 		}, {
 			type: 'input',
 			name: 'wpTitle',
 			message: 'Default WP title?',
-			default: 'Some title'
+			default: 'PMC LOCAL ' + process.cwd().split(path.sep).pop().toLowerCase()
 		}, {
 			type: 'input',
 			name: 'wpSlug',
-			message: 'Default WP slug?',
+			message: 'Default WP theme slug?',
 			default: process.cwd().split(path.sep).pop().toLowerCase()
 		}, {
 			type: 'input',
 			name: 'wpEmail',
 			message: 'Default WP dev email?',
-			default: 'amdin@pmcdev.local'
+			default: 'dist.dev@pmc.com'
+		}, {
+			type: 'input',
+			name: 'wpDbHost',
+			message: 'Default WP host?',
+			default: 'mysql'
+		}, {
+			type: 'input',
+			name: 'wpDbUser',
+			message: 'Default WP DB user?',
+			default: 'wp'
+		}, {
+			type: 'input',
+			name: 'wpDbPass',
+			message: 'Default WP DB pass?',
+			default: 'wp'
 		}, {
 			type: 'input',
 			name: 'wpUserName',
@@ -68,23 +115,98 @@ function showPrompts() {
 			name: 'wpUserPass',
 			message: 'Default WP pass?',
 			default: 'wp'
-		}, {
-			type: 'confirm',
-			name: 'provisioner',
-			message: 'Does this use the provisioner container?',
-			default: ''
+	}, {
+			type: 'input',
+			name: 'wpDir',
+			message: 'Default web root?',
+			default: '/var/www/html'
+	}, {
+			type: 'input',
+			name: 'wpDbName',
+			message: 'Default DB name?',
+			default: 'wordpress'
+	}, {
+		type: 'confirm',
+		name: 'wpHasCoreV2',
+		message: 'Does this theme use pmc-core-v2',
+		default: function (answers) {
+			return true;
+		}
+	}, {
+		type: 'confirm',
+		name: 'wpHasBuild',
+		message: 'Does WP have build support?',
+		default: function (answers) {
+			return true;
+		}
+	}, {
+		type: 'confirm',
+		name: 'wpHasTests',
+		message: 'Does WP have test support?',
+		default: function (answers) {
+			return true;
+		}
+	}, {
+		type: 'confirm',
+		name: 'wpHasSvnDeploy',
+		message: 'Does WP have SVN repository on WPCOM?',
+		default: function (answers) {
+			return false;
+		}
+	}, {
+		type: 'input',
+		name: 'textDomain',
+		message: 'Project text domain for WP translations',
+			default: process.cwd().split(path.sep).pop().toLowerCase()
+	}, {
+		type: 'input',
+		name: 'buildCommand',
+		message: 'What is the main npm build command for production/qa? i.e. npm run {prod|build}',
+		default: 'build',
+		when: function (answers) {
+			return answers.wpHasBuild;
+		}
+	}, {
+		type: 'input',
+		name: 'buildCompiledDir',
+		message: 'What is the compiled assets directory for artifact caching? e.x. assets/',
+		default: 'assets/**',
+		when: function (answers) {
+			return answers.wpHasBuild;
+		}
+	}, {
+		type: 'input',
+		name: 'buildDir',
+		message: 'What is the directory of your package file if not in root?',
+		default: false,
+		when: function (answers) {
+			return answers.wpHasBuild;
+		}
 	}];
 
 	this.prompt(prompts, function (props) {
-		provisioner = props.provisioner;
+		buildCommand = props.buildCommand;
+		buildCompiledDir = props.buildCompiledDir;
+		wpComposerType = props.wpComposerType;
+		wpDbHost = props.wpDbHost;
+		wpDbName = props.wpDbName;
+		wpDbPass = props.wpDbPass;
+		wpDbUser = props.wpDbUser;
+		wpDir = props.wpDir;
 		wpDomain = props.wpDomain;
+		textDomain = props.textDomain;
 		wpEmail = props.wpEmail;
-		wpEnvironment = props.wpEnvironment;
+		wpHasBuild = props.wpHasBuild;
+		wpHasCoreV2 = props.wpHasCoreV2;
+		wpHasSvnDeploy = props.wpHasSvnDeploy;
+		wpHasTests = props.wpHasTests;
+		wpHostType = props.wpHostType;
 		wpSlug = props.wpSlug;
 		wpTheme = props.wpTheme;
 		wpTitle = props.wpTitle;
 		wpUserName = props.wpUserName;
 		wpUserPass = props.wpUserPass;
+		wpVersion = props.wpVersion;
 		done();
 	}.bind(this));
 }
@@ -92,16 +214,29 @@ function showPrompts() {
 
 function getDefaultTemplateData() {
 	return {
-		provisioner: provisioner,
+		buildCommand: buildCommand,
+		buildCompiledDir: buildCompiledDir,
+		buildDir: buildDir,
+		wpComposerType: wpComposerType,
+		wpDbHost: wpDbHost,
+		wpDbName: wpDbName,
+		wpDbPass: wpDbPass,
+		wpDbUser: wpDbUser,
 		wpDir: wpDir,
 		wpDomain: wpDomain,
+		textDomain: textDomain,
 		wpEmail: wpEmail,
-		wpEnvironment: wpEnvironment,
+		wpHasBuild: wpHasBuild,
+		wpHasCoreV2: wpHasCoreV2,
+		wpHasSvnDeploy: wpHasSvnDeploy,
+		wpHasTests: wpHasTests,
+		wpHostType: wpHostType,
 		wpSlug: wpSlug,
 		wpTheme: wpTheme,
 		wpTitle: wpTitle,
 		wpUserName: wpUserName,
-		wpUserPass: wpUserPass
+		wpUserPass: wpUserPass,
+		wpVersion: wpVersion
 	};
 }
 
@@ -126,8 +261,10 @@ function handleVipGo(yo) {
 function end() {
 	if (error) {
 		this.log(chalk.red('Errors occured. Please fix them and re-run the generator.'));
-		return;
+	} else {
+		this.log("Don't forget to check your configuration and ensure all dependencies are configured correctly.");
 	}
+	return;
 }
 
 var DockerGenerator = yeoman.generators.Base.extend({
@@ -141,7 +278,7 @@ var DockerGenerator = yeoman.generators.Base.extend({
 	askFor: showPrompts,
 	writing: function () {
 		this.sourceRoot(path.join(__dirname, './templates'));
-		switch (wpEnvironment) {
+		switch (wpHostType) {
 			case 'wpVipGo':
 				{
 					handleVipGo(this);

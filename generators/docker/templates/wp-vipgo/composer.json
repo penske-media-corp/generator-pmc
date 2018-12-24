@@ -1,71 +1,69 @@
 {
-	"name": "wpcomvip/<%= wpSlug %>",
-	"description": "<%= wpTitle %>",
-	"type": "project",
-	"authors": [
+	"name": "pmc/<%= wpSlug %>",
+		"description": "<%= wpTitle %>",
+		"type": "<%= wpComposerType %>",
+		"license": "proprietary",
+		"authors": [
 		{
-			"name": "PMC"
+			"name": "PMC",
+			"homepage": "https://pmc.com"
 		}
-	],
-	"scripts": {
-		"post-install-cmd": [ ]
-	},
-	"require": {
-		"Automattic/vip-go-mu-plugins-built": "*",
-		"composer/installers": "~1.0",
-		"wpackagist-plugin/pmc-plugins":">=1.0",
-		"wpackagist-theme/pmc-core-v2":">=1.0"
-	},
-	"repositories":[
-		{
-			"type":"composer",
-			"url":"https://wpackagist.org"
+		],
+		"scripts": {
+			"post-install-cmd": [
+				"git archive --prefix=./vendor/pmc/plugins/ --remote=git@bitbucket.org:penskemediacorp/pmc-vip-go-plugins.git HEAD | tar -x",
+			"mkdir -p ./vendor/pmc/mu-plugins && curl -sL https://github.com/Automattic/vip-go-mu-plugins-built/archive/master.tar.gz > vip-go-mu-plugins-built.tar && tar --strip-components=1 -zxf vip-go-mu-plugins-built.tar -C ./vendor/pmc/mu-plugins && rm vip-go-mu-plugins-built.tar"
+			]
 		},
-		{
-			"type": "package",
-			"package": {
-					"name": "Automattic/vip-go-mu-plugins-built",
-					"version": "1.0",
-					"type": "vcs",
-					"source": {
-							"url": "git@github.com:Automattic/vip-go-mu-plugins-built.git",
-							"type": "git",
-							"reference": "origin/master"
-					}
+		"repositories": {
+			"pmc/pmc-plugins": {
+				"type": "vcs",
+				"url": "git@bitbucket.org:penskemediacorp/pmc-plugins.git"
+			},
+			<% if(wpHasCoreV2) { %>"pmc/pmc-core-v2": {
+				"type": "vcs",
+				"url": "git@bitbucket.org:penskemediacorp/pmc-core-v2.git"
+			},<% } %>
+			"pmc/pmc-codesniffer": {
+				"type": "vcs",
+				"url": "git@bitbucket.org:penskemediacorp/pmc-codesniffer.git"
+			},
+			"pmc/composer-ci-meta": {
+				"type": "vcs",
+				"url": "git@bitbucket.org:penskemediacorp/composer-ci-meta.git"
 			}
 		},
-		{
-			"type": "package",
-			"package": {
-					"name": "wpackagist-plugin/pmc-plugins",
-					"version": "1.0",
-					"type": "wordpress-plugin",
-					"source": {
-							"url": "git@bitbucket.org:penskemediacorp/pmc-plugins.git",
-							"type": "git",
-							"reference": "origin/master"
-					}
+		"require": {
+			"composer/installers": "^1.6",
+			<% if(wpHasCoreV2) { %>"pmc/pmc-core-v2": "dev-master",<% } %>
+			"pmc/pmc-plugins": "dev-master"
+		},
+		"extra": {
+			"installer-paths": {
+				"./vendor/pmc/client-mu-plugins/{$name}/": [
+					"type:wordpress-muplugin"
+				],
+				"./vendor/pmc/plugins/{$name}/": [
+					"type:wordpress-plugin"
+				],
+				"./vendor/pmc/themes/vip/{$name}/": [
+					"type:wordpress-theme"
+				]
 			}
 		},
-		{
-			"type": "package",
-			"package": {
-					"name": "wpackagist-theme/pmc-core-v2",
-					"version": "1.0",
-					"type": "wordpress-theme",
-					"source": {
-							"url": "git@bitbucket.org:penskemediacorp/pmc-core-v2.git",
-							"type": "git",
-							"reference": "origin/master"
-					}
-			}
+		"require-dev": {
+			"automattic/vipwpcs": "^0.3.0",
+			"exussum12/coverage-checker": "^0.11.0",
+			"hirak/prestissimo": "^0.3.8",
+			"jdgrimes/wp-l10n-validator": "^0.4.0",
+			"phploc/phploc": "^4.0",
+			"phpmd/phpmd": "^2.6",
+			"phpunit/php-invoker": "^2.0",
+			"phpunit/phpunit": "6.5.7",
+			"pmc/composer-ci-meta": "dev-master",
+			"pmc/pmc-codesniffer": "dev-master",
+			"sebastian/phpcpd": "1.4.*",
+			"squizlabs/php_codesniffer": "*",
+			"wp-coding-standards/wpcs": "^1.2"
 		}
-	],
-	"extra": {
-		"installer-paths": {
-			"./client-mu-plugins/{$name}/": ["type:wordpress-muplugin"],
-			"./plugins/{$name}/": ["type:wordpress-plugin"],
-			"./themes/vip/{$name}/": ["type:wordpress-theme"]
-		}
-	}
 }
