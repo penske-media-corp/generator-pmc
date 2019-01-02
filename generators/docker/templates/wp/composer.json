@@ -1,0 +1,96 @@
+{
+	"name": "pmc/<%= wpSlug %>",
+		"description": "<%= wpTitle %>",
+		"type": "<%= wpComposerType %>",
+		"license": "proprietary",
+		"authors": [
+		{
+			"name": "PMC",
+			"homepage": "https://pmc.com"
+		}
+		],
+		"scripts": {
+			"post-install-cmd": [
+			<% if ('wpVipGo' == wpHostType) { %>"bash && . pmc-functions && pmc_composer_post_install vipgo"<% } %>
+			<% if ('wpCom' == wpHostType) { %>"bash && . pmc-functions && pmc_composer_post_install wpcom"<% } %>
+			]
+		},
+		"repositories": {
+			"pmc/pmc-plugins": {
+				"type": "vcs",
+				"url": "git@bitbucket.org:penskemediacorp/pmc-plugins.git"
+			},
+			<% if(wpHasCoreV2) { %>"pmc/pmc-core-v2": {
+				"type": "vcs",
+				"url": "git@bitbucket.org:penskemediacorp/pmc-core-v2.git"
+			},<% } %>
+			<% if('wpCom' == wpHostType) { %>"pmc/vip-wpcom-mu-plugins": {
+				"type": "package",
+				"package": {
+					"name": "pmc/vip-wpcom-mu-plugins",
+					"version": "dev-master",
+					"type": "wordpress-muplugin",
+					"source": {
+						"url": "https://github.com/automattic/vip-wpcom-mu-plugins.git",
+						"type": "git",
+						"reference":"master"
+					}
+				}
+			},
+			"pmc/wordpress-vip-plugins": {
+				"type": "vcs",
+				"url": "git@bitbucket.org:penskemediacorp/wordpress-vip-plugins.git"
+			},<% } %>
+			<% if('wpVipGo' == wpHostType) { %>"pmc/vip-go-mu-plugins-built": {
+				"type": "package",
+				"package": {
+					"name": "pmc/vip-go-mu-plugins-built",
+					"version": "dev-master",
+					"type": "wordpress-muplugin",
+					"source": {
+						"url": "https://github.com/Automattic/vip-go-mu-plugins-built.git",
+						"type": "git",
+						"reference":"master"
+					}
+				}
+			},
+			"pmc/pmc-vip-go-plugins": {
+				"type": "vcs",
+				"url": "git@bitbucket.org:penskemediacorp/pmc-vip-go-plugins.git"
+			},<% } %>
+			"pmc/pmc-codesniffer": {
+				"type": "vcs",
+				"url": "git@bitbucket.org:penskemediacorp/pmc-codesniffer.git"
+			},
+			"pmc/composer-ci-meta": {
+				"type": "vcs",
+				"url": "git@bitbucket.org:penskemediacorp/composer-ci-meta.git"
+			}
+		},
+		"require": {
+			"composer/installers": "^1.6",
+			<% if(wpHasCoreV2) { %>"pmc/pmc-core-v2": "dev-master",<% } %>
+			<% if('wpCom' == wpHostType) { %>"pmc/wordpress-vip-plugins": "dev-master",<% } %>
+			<% if('wpCom' == wpHostType) { %>"pmc/vip-wpcom-mu-plugins": "dev-master",<% } %>
+			<% if('wpVipGo' == wpHostType) { %>"pmc/pmc-vip-go-plugins": "dev-master",<% } %>
+			<% if('wpVipGo' == wpHostType) { %>"pmc/vip-go-mu-plugins-built": "dev-master",<% } %>
+			"pmc/pmc-plugins": "dev-master"
+		},
+		"extra": {
+			"installer-paths": {
+				"./vendor/pmc/mu-plugins/{$name}/": [
+					"type:wordpress-muplugin"
+				],
+				"./vendor/pmc/plugins/{$name}/": [
+					"type:wordpress-plugin"
+				],
+				"./vendor/pmc/themes/vip/{$name}/": [
+					"type:wordpress-theme"
+				]
+			}
+		},
+		"require-dev": {
+			"pmc/composer-ci-meta": "dev-master",
+			"pmc/pmc-codesniffer": "dev-master"
+		}
+}

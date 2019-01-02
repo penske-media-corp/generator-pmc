@@ -29,6 +29,7 @@ var wpHasCoreV2 = '';
 var wpHasSvnDeploy = '';
 var wpHasTests = '';
 var wpHostType = '';
+var wpMultisite = '';
 var wpSlug = '';
 var wpTheme = '';
 var wpTitle = '';
@@ -45,6 +46,9 @@ function showPrompts() {
 		choices: [{
 			name: 'WP VIP Go',
 			value: 'wpVipGo'
+		},{
+			name: 'WPCom',
+			value: 'wpCom'
 		}]
 		}, {
 		type: 'list',
@@ -66,10 +70,17 @@ function showPrompts() {
 			message: 'Default WP dev domain?',
 			default: process.cwd().split(path.sep).pop().toLowerCase() + '.pmcdev.local'
 		}, {
+			type: 'confirm',
+			name: 'wpHasCoreV2',
+			message: 'Multisite?',
+			default: function (answers) {
+				return false;
+			}
+		}, {
 			type: 'input',
 			name: 'wpVersion',
 			message: 'Default WP version',
-			default: '5.0'
+			default: '4.9.7'
 		}, {
 			type: 'input',
 			name: 'wpTheme',
@@ -178,7 +189,7 @@ function showPrompts() {
 		type: 'input',
 		name: 'buildDir',
 		message: 'What is the directory of your package file if not in root?',
-		default: false,
+		default: 'assets',
 		when: function (answers) {
 			return answers.wpHasBuild;
 		}
@@ -187,6 +198,7 @@ function showPrompts() {
 	this.prompt(prompts, function (props) {
 		buildCommand = props.buildCommand;
 		buildCompiledDir = props.buildCompiledDir;
+		textDomain = props.textDomain;
 		wpComposerType = props.wpComposerType;
 		wpDbHost = props.wpDbHost;
 		wpDbName = props.wpDbName;
@@ -194,13 +206,13 @@ function showPrompts() {
 		wpDbUser = props.wpDbUser;
 		wpDir = props.wpDir;
 		wpDomain = props.wpDomain;
-		textDomain = props.textDomain;
 		wpEmail = props.wpEmail;
 		wpHasBuild = props.wpHasBuild;
 		wpHasCoreV2 = props.wpHasCoreV2;
 		wpHasSvnDeploy = props.wpHasSvnDeploy;
 		wpHasTests = props.wpHasTests;
 		wpHostType = props.wpHostType;
+		wpMultisite = props.wpMultisite;
 		wpSlug = props.wpSlug;
 		wpTheme = props.wpTheme;
 		wpTitle = props.wpTitle;
@@ -217,6 +229,7 @@ function getDefaultTemplateData() {
 		buildCommand: buildCommand,
 		buildCompiledDir: buildCompiledDir,
 		buildDir: buildDir,
+		textDomain: textDomain,
 		wpComposerType: wpComposerType,
 		wpDbHost: wpDbHost,
 		wpDbName: wpDbName,
@@ -224,13 +237,13 @@ function getDefaultTemplateData() {
 		wpDbUser: wpDbUser,
 		wpDir: wpDir,
 		wpDomain: wpDomain,
-		textDomain: textDomain,
 		wpEmail: wpEmail,
 		wpHasBuild: wpHasBuild,
 		wpHasCoreV2: wpHasCoreV2,
 		wpHasSvnDeploy: wpHasSvnDeploy,
 		wpHasTests: wpHasTests,
 		wpHostType: wpHostType,
+		wpMultisite: wpMultisite,
 		wpSlug: wpSlug,
 		wpTheme: wpTheme,
 		wpTitle: wpTitle,
@@ -242,7 +255,7 @@ function getDefaultTemplateData() {
 
 function handleCommmonTemplates(yo, helper, templateData, cb) {
 	yo.fs.copyTpl(
-		yo.templatePath(helper.getTemplateDockerWpVipGo()),
+		yo.templatePath(helper.getTemplateDockerWp()),
 		yo.destinationPath('.'),
 		templateData
 	);
@@ -250,7 +263,7 @@ function handleCommmonTemplates(yo, helper, templateData, cb) {
 	return;
 }
 
-function handleVipGo(yo) {
+function handleWp(yo) {
 	var docker = new DockerHelper();
 	var done = yo.async();
 	var templateData = getDefaultTemplateData();
@@ -278,16 +291,7 @@ var DockerGenerator = yeoman.generators.Base.extend({
 	askFor: showPrompts,
 	writing: function () {
 		this.sourceRoot(path.join(__dirname, './templates'));
-		switch (wpHostType) {
-			case 'wpVipGo':
-				{
-					handleVipGo(this);
-					break;
-				}
-			default:
-				this.log.error(':( not implemented.');
-				break;
-		}
+		handleWp(this);
 	},
 	end: end
 });

@@ -2,8 +2,9 @@ version: "3"
 
 services:
 
-  wordpress:
-    image: penskemediacorporation/wpserver
+  wp:
+    <% if ('wpVipGo' == wpHostType) { %>image: penskemediacorporation/vipgo:v2<% } %>
+    <% if ('wpCom' == wpHostType) { %>image: penskemediacorporation/wpcom:v2<% } %>
     working_dir: <%= wpDir %>/wp-content/themes/<%= wpTheme %>
     ports:
       - 80:80
@@ -13,22 +14,20 @@ services:
       - "front"
       - "back"
     volumes:
-      - "./.cache/images:<%= wpDir %>/wp-content/images"
+      <% if ('wpVipGo' == wpHostType) { %>- "./.cache/images:<%= wpDir %>/wp-content/images"
       - "./.cache/languages:<%= wpDir %>/wp-content/languages"
       - "./.cache/private:<%= wpDir %>/wp-content/private"
-      - "./.cache/uploads:<%= wpDir %>/wp-content/uploads"
+      - "./.cache/uploads:<%= wpDir %>/wp-content/uploads"<% } %>
       - "./.cache/wp:<%= wpDir %>:rw"
       - "./:<%= wpDir %>/wp-content/themes/<%= wpTheme %>:rw"
+      - "./confd-configs:/etc/confd"
       - "./vendor/pmc/mu-plugins:<%= wpDir %>/wp-content/mu-plugins"
       - "./vendor/pmc/plugins:<%= wpDir %>/wp-content/plugins:rw"
       <% if(wpHasCoreV2) { %>- "./vendor/pmc/themes/vip/pmc-core-v2:<%= wpDir %>/wp-content/themes/vip/pmc-core-v2"<% } %>
 
   mysql:
     image: "mariadb"
-    environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_DATABASE: "wordpress"
-      MYSQL_ROOT_PASSWORD: ""
+    env_file: .env
     networks:
       - "back"
 
@@ -39,7 +38,6 @@ services:
     volumes:
       - "./.cache/wp:<%= wpDir %>:rw"
       - "./:<%= wpDir %>/wp-content/themes/<%= wpTheme %>:rw"
-      - "./confd-configs:/etc/confd"
       - "./vendor/pmc/mu-plugins:<%= wpDir %>/wp-content/mu-plugins"
       - "./vendor/pmc/plugins:<%= wpDir %>/wp-content/plugins:rw"
       <% if(wpHasCoreV2) { %>- "./vendor/pmc/themes/vip/pmc-core-v2:<%= wpDir %>/wp-content/themes/vip/pmc-core-v2"<% } %>
@@ -55,7 +53,6 @@ services:
     volumes:
       - "./.cache/wp:<%= wpDir %>:rw"
       - "./:<%= wpDir %>/wp-content/themes/<%= wpTheme %>:rw"
-      - "./confd-configs:/etc/confd"
       - "./vendor/pmc/mu-plugins:<%= wpDir %>/wp-content/mu-plugins"
       - "./vendor/pmc/plugins:<%= wpDir %>/wp-content/plugins:rw"
       <% if(wpHasCoreV2) { %>- "./vendor/pmc/themes/vip/pmc-core-v2:<%= wpDir %>/wp-content/themes/vip/pmc-core-v2"<% } %>
