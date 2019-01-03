@@ -34,3 +34,6 @@ The setup for docker relies on a VIP-GO project structure as demonstrated in the
 * Navigate to your project
 * `yo pmc:pipelines`
 * Follow the prompts to setup pipelines config
+
+## Improvements / Feature requests
+If the generator doesn't quite fit the project structure or changes need to be made for improvements please either submit a PR or contact the DevOps engineering team.

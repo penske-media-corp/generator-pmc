@@ -23,7 +23,7 @@ services:
       - "./confd-configs:/etc/confd"
       - "./vendor/pmc/mu-plugins:<%= wpDir %>/wp-content/mu-plugins"
       - "./vendor/pmc/plugins:<%= wpDir %>/wp-content/plugins:rw"
-      <% if(wpHasCoreV2) { %>- "./vendor/pmc/themes/vip/pmc-core-v2:<%= wpDir %>/wp-content/themes/vip/pmc-core-v2"<% } %>
+      <% if(wpHasParentTheme) { %>- "./vendor/pmc/themes/vip/<%= wpParentTheme %>:<%= wpDir %>/wp-content/themes/vip/<%= wpParentTheme %>"<% } %>
 
   mysql:
     image: "mariadb"
@@ -40,7 +40,7 @@ services:
       - "./:<%= wpDir %>/wp-content/themes/<%= wpTheme %>:rw"
       - "./vendor/pmc/mu-plugins:<%= wpDir %>/wp-content/mu-plugins"
       - "./vendor/pmc/plugins:<%= wpDir %>/wp-content/plugins:rw"
-      <% if(wpHasCoreV2) { %>- "./vendor/pmc/themes/vip/pmc-core-v2:<%= wpDir %>/wp-content/themes/vip/pmc-core-v2"<% } %>
+      <% if(wpHasParentTheme) { %>- "./vendor/pmc/themes/vip/<%= wpParentTheme %>:<%= wpDir %>/wp-content/themes/vip/<%= wpParentTheme %>"<% } %>
     networks:
       - "back"
     depends_on:
@@ -55,7 +55,7 @@ services:
       - "./:<%= wpDir %>/wp-content/themes/<%= wpTheme %>:rw"
       - "./vendor/pmc/mu-plugins:<%= wpDir %>/wp-content/mu-plugins"
       - "./vendor/pmc/plugins:<%= wpDir %>/wp-content/plugins:rw"
-      <% if(wpHasCoreV2) { %>- "./vendor/pmc/themes/vip/pmc-core-v2:<%= wpDir %>/wp-content/themes/vip/pmc-core-v2"<% } %>
+      <% if(wpHasParentTheme) { %>- "./vendor/pmc/themes/vip/<%= wpParentTheme %>:<%= wpDir %>/wp-content/themes/vip/<%= wpParentTheme %>"<% } %>
 
 networks:
   back: {}

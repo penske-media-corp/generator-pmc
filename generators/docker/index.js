@@ -25,9 +25,10 @@ var wpDir = '';
 var wpDomain = '';
 var wpEmail = '';
 var wpHasBuild = '';
-var wpHasCoreV2 = '';
+var wpHasParentTheme = '';
 var wpHasSvnDeploy = '';
 var wpHasTests = '';
+var wpParentTheme = '';
 var wpHostType = '';
 var wpMultisite = '';
 var wpSlug = '';
@@ -71,7 +72,7 @@ function showPrompts() {
 			default: process.cwd().split(path.sep).pop().toLowerCase() + '.pmcdev.local'
 		}, {
 			type: 'confirm',
-			name: 'wpHasCoreV2',
+			name: 'wpHasParentTheme',
 			message: 'Multisite?',
 			default: function (answers) {
 				return false;
@@ -138,10 +139,18 @@ function showPrompts() {
 			default: 'wordpress'
 	}, {
 		type: 'confirm',
-		name: 'wpHasCoreV2',
-		message: 'Does this theme use pmc-core-v2',
+		name: 'wpHasParentTheme',
+		message: 'Does this theme use a parent theme?',
 		default: function (answers) {
 			return true;
+		}
+	}, {
+		type: 'input',
+		name: 'wpParentTheme',
+		message: 'Parent theme slug',
+		default: 'pmc-core-v2',
+		when: function (answers) {
+			return answers.wpHasParentTheme;
 		}
 	}, {
 		type: 'confirm',
@@ -172,7 +181,7 @@ function showPrompts() {
 	}, {
 		type: 'input',
 		name: 'buildCommand',
-		message: 'What is the main npm build command for production/qa? i.e. npm run {prod|build}',
+		message: 'Main npm build command for production/qa? i.e. npm run {prod|build}',
 		default: 'build',
 		when: function (answers) {
 			return answers.wpHasBuild;
@@ -180,7 +189,7 @@ function showPrompts() {
 	}, {
 		type: 'input',
 		name: 'buildCompiledDir',
-		message: 'What is the compiled assets directory for artifact caching? e.x. assets/',
+		message: 'Compiled assets directory for artifact caching? e.x. assets/**',
 		default: 'assets/**',
 		when: function (answers) {
 			return answers.wpHasBuild;
@@ -188,8 +197,8 @@ function showPrompts() {
 	}, {
 		type: 'input',
 		name: 'buildDir',
-		message: 'What is the directory of your package file if not in root?',
-		default: 'assets',
+		message: 'Directory of package file if not in root?',
+		default: false,
 		when: function (answers) {
 			return answers.wpHasBuild;
 		}
@@ -208,9 +217,10 @@ function showPrompts() {
 		wpDomain = props.wpDomain;
 		wpEmail = props.wpEmail;
 		wpHasBuild = props.wpHasBuild;
-		wpHasCoreV2 = props.wpHasCoreV2;
+		wpHasParentTheme = props.wpHasParentTheme;
 		wpHasSvnDeploy = props.wpHasSvnDeploy;
 		wpHasTests = props.wpHasTests;
+		wpParentTheme = props.wpParentTheme;
 		wpHostType = props.wpHostType;
 		wpMultisite = props.wpMultisite;
 		wpSlug = props.wpSlug;
@@ -239,9 +249,10 @@ function getDefaultTemplateData() {
 		wpDomain: wpDomain,
 		wpEmail: wpEmail,
 		wpHasBuild: wpHasBuild,
-		wpHasCoreV2: wpHasCoreV2,
+		wpHasParentTheme: wpHasParentTheme,
 		wpHasSvnDeploy: wpHasSvnDeploy,
 		wpHasTests: wpHasTests,
+		wpParentTheme: wpParentTheme,
 		wpHostType: wpHostType,
 		wpMultisite: wpMultisite,
 		wpSlug: wpSlug,
@@ -275,7 +286,7 @@ function end() {
 	if (error) {
 		this.log(chalk.red('Errors occured. Please fix them and re-run the generator.'));
 	} else {
-		this.log("Don't forget to check your configuration and ensure all dependencies are configured correctly.");
+		this.log("Don't forget to check configuration and ensure all dependencies are configured correctly.");
 	}
 	return;
 }
