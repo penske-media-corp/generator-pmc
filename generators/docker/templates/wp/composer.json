@@ -11,8 +11,8 @@
 		],
 		"scripts": {
 			"post-install-cmd": [
-			<% if ('wpVipGo' == wpHostType) { %>"bash && . pmc-functions && pmc_composer_post_install vipgo"<% } %>
-			<% if ('wpCom' == wpHostType) { %>"bash && . pmc-functions && pmc_composer_post_install wpcom"<% } %>
+				<% if ('wpVipGo' == wpHostType) { %>"bash && . pmc-functions && pmc_composer_post_install vipgo"<% } %>
+				<% if ('wpCom' == wpHostType) { %>"bash && . pmc-functions && pmc_composer_post_install wpcom"<% } %>
 			]
 		},
 		"repositories": {

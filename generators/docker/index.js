@@ -30,7 +30,7 @@ var wpHasSvnDeploy = '';
 var wpHasTests = '';
 var wpParentTheme = '';
 var wpHostType = '';
-var wpMultisite = '';
+var wpMultisite = false;
 var wpSlug = '';
 var wpTheme = '';
 var wpTitle = '';
@@ -72,7 +72,7 @@ function showPrompts() {
 			default: process.cwd().split(path.sep).pop().toLowerCase() + '.pmcdev.local'
 		}, {
 			type: 'confirm',
-			name: 'wpHasParentTheme',
+			name: 'wpMultisite',
 			message: 'Multisite?',
 			default: function (answers) {
 				return false;
