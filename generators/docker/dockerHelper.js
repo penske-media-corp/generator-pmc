@@ -9,8 +9,8 @@ var DockerHelper = function () {}
 
 DockerHelper.prototype = Object.create(BaseHelper.prototype);
 
-DockerHelper.prototype.getTemplateDockerWpVipGo= function () {
-	return 'wp-vipgo';
+DockerHelper.prototype.getTemplateDockerWp= function () {
+	return 'wp';
 }
 
 module.exports = DockerHelper;

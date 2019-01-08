@@ -1,0 +1,73 @@
+image:
+  name: penskemediacorporation/pipeline-compose
+  username: $DOCKERHUB_PIPELINE_USERNAME
+  password: $DOCKERHUB_PIPELINE_PASSWORD
+options:
+  docker: true
+
+pipelines:
+  default:
+    - step:
+        name: Build
+        size: 2x
+        artifacts:
+          <% if (buildCompiledDir) { %>- <%= buildCompiledDir %><% } %>
+          - languages/**
+          - node_modules/**
+          - vendor/**
+        services:
+          - docker
+        caches:
+          - docker
+        script:
+          - docker login -u $DOCKERHUB_PIPELINE_USERNAME -p $DOCKERHUB_PIPELINE_PASSWORD
+          - docker-compose run
+            -e BITBUCKET_BRANCH=$BITBUCKET_BRANCH
+            -e BITBUCKET_CLONE_DIR=$BITBUCKET_CLONE_DIR
+            -e BITBUCKET_COMMIT=$BITBUCKET_COMMIT
+            -e BITBUCKET_REPO_OWNER=$BITBUCKET_REPO_OWNER
+            -e BITBUCKET_REPO_SLUG=$BITBUCKET_REPO_SLUG
+            -e BITBUCKET_TAG=$BITBUCKET_TAG
+            -e CI=$CI
+            -e DOCKER_HOST=$DOCKER_HOST
+            -e PMC_CI_ENCODED_KEY=$PMC_CI_ENCODED_KEY
+            --rm pipeline-build
+          - docker-compose down
+    - step:
+        name: Test
+        size: 2x
+        caches:
+          - node
+          - composer
+          - docker
+        services:
+          - docker
+        script:
+          - chmod -R 777 ./node_modules ./vendor #required outside pipeline to make writable
+          - docker login -u $DOCKERHUB_PIPELINE_USERNAME -p $DOCKERHUB_PIPELINE_PASSWORD
+          - docker-compose up -d
+          - docker-compose run
+            -e BITBUCKET_BRANCH=$BITBUCKET_BRANCH
+            -e BITBUCKET_CLONE_DIR=$BITBUCKET_CLONE_DIR
+            -e BITBUCKET_COMMIT=$BITBUCKET_COMMIT
+            -e BITBUCKET_REPO_OWNER=$BITBUCKET_REPO_OWNER
+            -e BITBUCKET_REPO_SLUG=$BITBUCKET_REPO_SLUG
+            -e BITBUCKET_TAG=$BITBUCKET_TAG
+            -e CI=$CI
+            -e PMC_DIFF_ONLY=true
+            -e CODECOV_AUTH_TOKEN=$CODECOV_AUTH_TOKEN
+            -e DOCKER_HOST=$DOCKER_HOST
+            -e PMC_CI_ENCODED_KEY=$PMC_CI_ENCODED_KEY
+            --rm pipeline-test
+          - docker-compose down
+<% if (wpHasSvnDeploy) { %>
+    - step:
+        name: Deploy to VIP SVN
+        deployment: production
+        trigger: manual
+        image:
+          name: penskemediacorporation/pipeline-deploy
+          username: $DOCKERHUB_PIPELINE_USERNAME
+          password: $DOCKERHUB_PIPELINE_PASSWORD
+        script:
+          - source /usr/local/bin/start.sh<% } %>

@@ -1,0 +1,65 @@
+version: "3"
+
+services:
+
+  wp:
+    <% if ('wpVipGo' == wpHostType) { %>image: penskemediacorporation/vipgo:v2<% } %>
+    <% if ('wpCom' == wpHostType) { %>image: penskemediacorporation/wpcom:v2<% } %>
+    working_dir: <%= wpDir %>/wp-content/themes/<%= wpTheme %>
+    ports:
+      - 80:80
+    depends_on:
+      - "mysql"
+    networks:
+      - "front"
+      - "back"
+    volumes:
+      <% if ('wpVipGo' == wpHostType) { %>- "./.cache/images:<%= wpDir %>/wp-content/images"
+      - "./.cache/languages:<%= wpDir %>/wp-content/languages"
+      - "./.cache/private:<%= wpDir %>/wp-content/private"
+      - "./.cache/uploads:<%= wpDir %>/wp-content/uploads"<% } %>
+      - "./.cache/wp:<%= wpDir %>:rw"
+      - "./:<%= wpDir %>/wp-content/themes/<%= wpTheme %>:rw"
+      - "./confd-configs:/etc/confd"
+      - "./vendor/pmc/mu-plugins:<%= wpDir %>/wp-content/mu-plugins"
+      - "./vendor/pmc/plugins:<%= wpDir %>/wp-content/plugins:rw"
+      <% if(wpHasParentTheme) { %>- "./vendor/pmc/themes/vip/<%= wpParentTheme %>:<%= wpDir %>/wp-content/themes/vip/<%= wpParentTheme %>"<% } %>
+
+  mysql:
+    image: "mariadb"
+    env_file: .env
+    networks:
+      - "back"
+
+  pipeline-build:
+    image: penskemediacorporation/pipeline-build:v2
+    working_dir: <%= wpDir %>/wp-content/themes/<%= wpTheme %>
+    env_file: .env
+    volumes:
+      - "./.cache/wp:<%= wpDir %>:rw"
+      - "./:<%= wpDir %>/wp-content/themes/<%= wpTheme %>:rw"
+      - "./vendor/pmc/mu-plugins:<%= wpDir %>/wp-content/mu-plugins"
+      - "./vendor/pmc/plugins:<%= wpDir %>/wp-content/plugins:rw"
+      <% if(wpHasParentTheme) { %>- "./vendor/pmc/themes/vip/<%= wpParentTheme %>:<%= wpDir %>/wp-content/themes/vip/<%= wpParentTheme %>"<% } %>
+    networks:
+      - "back"
+    depends_on:
+      - mysql
+
+  pipeline-test:
+    image: penskemediacorporation/pipeline-test:v2
+    working_dir: <%= wpDir %>/wp-content/themes/<%= wpTheme %>
+    env_file: .env
+    volumes:
+      - "./.cache/wp:<%= wpDir %>:rw"
+      - "./:<%= wpDir %>/wp-content/themes/<%= wpTheme %>:rw"
+      - "./vendor/pmc/mu-plugins:<%= wpDir %>/wp-content/mu-plugins"
+      - "./vendor/pmc/plugins:<%= wpDir %>/wp-content/plugins:rw"
+      <% if(wpHasParentTheme) { %>- "./vendor/pmc/themes/vip/<%= wpParentTheme %>:<%= wpDir %>/wp-content/themes/vip/<%= wpParentTheme %>"<% } %>
+
+networks:
+  back: {}
+  front: {}
+
+volumes:
+  mysql: {}
