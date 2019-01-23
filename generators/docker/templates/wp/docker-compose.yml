@@ -3,8 +3,7 @@ version: "3"
 services:
 
   wp:
-    <% if ('wpVipGo' == wpHostType) { %>image: penskemediacorporation/vipgo:v2<% } %>
-    <% if ('wpCom' == wpHostType) { %>image: penskemediacorporation/wpcom:v2<% } %>
+    image: penskemediacorporation/wpdev
     working_dir: <%= wpDir %>/wp-content/themes/<%= wpTheme %>
     ports:
       - 80:80

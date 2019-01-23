@@ -9,19 +9,18 @@ pipelines:
   default:
     - step:
         name: Build
-        size: 2x
         artifacts:
           <% if (buildCompiledDir) { %>- <%= buildCompiledDir %><% } %>
           - languages/**
-          - node_modules/**
-          - vendor/**
         services:
           - docker
         caches:
+          - composer
+          - composerlocal
           - docker
+          - node
         script:
           - docker login -u $DOCKERHUB_PIPELINE_USERNAME -p $DOCKERHUB_PIPELINE_PASSWORD
-          - docker-compose run
             -e BITBUCKET_BRANCH=$BITBUCKET_BRANCH
             -e BITBUCKET_CLONE_DIR=$BITBUCKET_CLONE_DIR
             -e BITBUCKET_COMMIT=$BITBUCKET_COMMIT
@@ -32,20 +31,18 @@ pipelines:
             -e DOCKER_HOST=$DOCKER_HOST
             -e PMC_CI_ENCODED_KEY=$PMC_CI_ENCODED_KEY
             --rm pipeline-build
-          - docker-compose down
     - step:
         name: Test
-        size: 2x
         caches:
-          - node
           - composer
+          - composerlocal
           - docker
+          - node
         services:
           - docker
         script:
           - chmod -R 777 ./node_modules ./vendor #required outside pipeline to make writable
           - docker login -u $DOCKERHUB_PIPELINE_USERNAME -p $DOCKERHUB_PIPELINE_PASSWORD
-          - docker-compose up -d
           - docker-compose run
             -e BITBUCKET_BRANCH=$BITBUCKET_BRANCH
             -e BITBUCKET_CLONE_DIR=$BITBUCKET_CLONE_DIR
@@ -59,7 +56,6 @@ pipelines:
             -e DOCKER_HOST=$DOCKER_HOST
             -e PMC_CI_ENCODED_KEY=$PMC_CI_ENCODED_KEY
             --rm pipeline-test
-          - docker-compose down
 <% if (wpHasSvnDeploy) { %>
     - step:
         name: Deploy to VIP SVN
@@ -71,3 +67,7 @@ pipelines:
           password: $DOCKERHUB_PIPELINE_PASSWORD
         script:
           - source /usr/local/bin/start.sh<% } %>
+
+definitions:
+  caches:
+    composerlocal: vendor
