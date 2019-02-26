@@ -19,7 +19,7 @@ services:
       - "./.cache/wp:<%= wpDir %>:rw"
       - "./:<%= wpDir %>/wp-content/themes/$WP_THEME:rw"
       - "./confd-configs:/etc/confd"
-      - "$PMC_SHARED_CODE_PATH//mu-plugins:<%= wpDir %>/wp-content/mu-plugins"
+      - "$PMC_SHARED_CODE_PATH/mu-plugins:<%= wpDir %>/wp-content/mu-plugins"
       - "$PMC_SHARED_CODE_PATH/plugins:<%= wpDir %>/wp-content/plugins:rw"
       <% if(wpHasParentTheme) { %>- "$PMC_SHARED_CODE_PATH/themes/vip/<%= wpParentTheme %>:<%= wpDir %>/wp-content/themes/vip/<%= wpParentTheme %>"<% } %>
 
