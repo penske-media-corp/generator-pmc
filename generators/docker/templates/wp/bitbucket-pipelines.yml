@@ -17,18 +17,20 @@ pipelines:
           - composer
           - composerlocal
           - docker
+          - localcache
           - node
         script:
           - . /usr/local/bin/docker-entrypoint.sh && build
     - step:
         name: Test
+        services:
+          - docker
         caches:
           - composer
           - composerlocal
           - docker
+          - localcache
           - node
-        services:
-          - docker
         script:
           - . /usr/local/bin/docker-entrypoint.sh && test
 <% if (wpHasSvnDeploy) { %>
@@ -46,3 +48,4 @@ pipelines:
 definitions:
   caches:
     composerlocal: vendor
+    localcache: .cache
