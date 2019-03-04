@@ -10,7 +10,6 @@ pipelines:
     - step:
         name: Build
         artifacts:
-          <% if (buildCompiledDir) { %>- <%= buildCompiledDir %><% } %>
           - languages/**
         services:
           - docker
@@ -18,44 +17,22 @@ pipelines:
           - composer
           - composerlocal
           - docker
+          - localcache
           - node
         script:
-          - docker login -u $DOCKERHUB_PIPELINE_USERNAME -p $DOCKERHUB_PIPELINE_PASSWORD
-            -e BITBUCKET_BRANCH=$BITBUCKET_BRANCH
-            -e BITBUCKET_CLONE_DIR=$BITBUCKET_CLONE_DIR
-            -e BITBUCKET_COMMIT=$BITBUCKET_COMMIT
-            -e BITBUCKET_REPO_OWNER=$BITBUCKET_REPO_OWNER
-            -e BITBUCKET_REPO_SLUG=$BITBUCKET_REPO_SLUG
-            -e BITBUCKET_TAG=$BITBUCKET_TAG
-            -e CI=$CI
-            -e DOCKER_HOST=$DOCKER_HOST
-            -e PMC_CI_ENCODED_KEY=$PMC_CI_ENCODED_KEY
-            --rm pipeline-build
+          - . /usr/local/bin/docker-entrypoint.sh && build
     - step:
         name: Test
+        services:
+          - docker
         caches:
           - composer
           - composerlocal
           - docker
+          - localcache
           - node
-        services:
-          - docker
         script:
-          - chmod -R 777 ./node_modules ./vendor #required outside pipeline to make writable
-          - docker login -u $DOCKERHUB_PIPELINE_USERNAME -p $DOCKERHUB_PIPELINE_PASSWORD
-          - docker-compose run
-            -e BITBUCKET_BRANCH=$BITBUCKET_BRANCH
-            -e BITBUCKET_CLONE_DIR=$BITBUCKET_CLONE_DIR
-            -e BITBUCKET_COMMIT=$BITBUCKET_COMMIT
-            -e BITBUCKET_REPO_OWNER=$BITBUCKET_REPO_OWNER
-            -e BITBUCKET_REPO_SLUG=$BITBUCKET_REPO_SLUG
-            -e BITBUCKET_TAG=$BITBUCKET_TAG
-            -e CI=$CI
-            -e PMC_DIFF_ONLY=true
-            -e CODECOV_AUTH_TOKEN=$CODECOV_AUTH_TOKEN
-            -e DOCKER_HOST=$DOCKER_HOST
-            -e PMC_CI_ENCODED_KEY=$PMC_CI_ENCODED_KEY
-            --rm pipeline-test
+          - . /usr/local/bin/docker-entrypoint.sh && test
 <% if (wpHasSvnDeploy) { %>
     - step:
         name: Deploy to VIP SVN
@@ -71,3 +48,4 @@ pipelines:
 definitions:
   caches:
     composerlocal: vendor
+    localcache: .cache
