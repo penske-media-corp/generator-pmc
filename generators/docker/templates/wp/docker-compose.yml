@@ -30,7 +30,7 @@ services:
       - "back"
 
   pipeline-build:
-    image: penskemediacorporation/pipeline-build:v2
+    image: penskemediacorporation/pipeline-build
     env_file: .env
     working_dir: "<%= wpDir %>/wp-content/themes/$WP_THEME"
     volumes:
@@ -45,7 +45,7 @@ services:
       - mysql
 
   pipeline-test:
-    image: penskemediacorporation/pipeline-test:v2
+    image: penskemediacorporation/pipeline-test
     env_file: .env
     working_dir: "<%= wpDir %>/wp-content/themes/$WP_THEME"
     volumes:
