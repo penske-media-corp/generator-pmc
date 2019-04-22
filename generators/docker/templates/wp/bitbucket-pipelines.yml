@@ -9,8 +9,6 @@ pipelines:
   default:
     - step:
         name: Build
-        artifacts:
-          - languages/**
         services:
           - docker
         caches:
