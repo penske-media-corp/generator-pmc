@@ -36,6 +36,7 @@ services:
     restart: on-failure
     working_dir: "<%= wpDir %>/wp-content/themes/$WP_THEME"
     volumes:
+      - "$SSH_AUTH_SOCK:/ssh-auth.sock"
       - "./.cache/wp:<%= wpDir %>:rw"
       - "./:<%= wpDir %>/wp-content/themes/$WP_THEME:rw"
       - "$PMC_SHARED_CODE_PATH/mu-plugins:<%= wpDir %>/wp-content/mu-plugins"
