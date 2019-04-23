@@ -34,7 +34,7 @@ services:
     image: penskemediacorporation/pipeline-build
     env_file: .env
     environment:
-      PMC_CI_ENCODED_KEY: "${PMC_CI_ENCODED_KEY}"
+      PMC_CI_ENCODED_KEY: "$PMC_CI_ENCODED_KEY"
     restart: on-failure
     working_dir: "<%= wpDir %>/wp-content/themes/$WP_THEME"
     volumes:
