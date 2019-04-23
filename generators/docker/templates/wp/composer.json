@@ -91,7 +91,6 @@
 			}
 		},
 		"require-dev": {
-			"pmc/composer-ci-meta": "dev-master",
-			"pmc/pmc-codesniffer": "dev-master"
+			"pmc/composer-ci-meta": "dev-master"
 		}
 }
