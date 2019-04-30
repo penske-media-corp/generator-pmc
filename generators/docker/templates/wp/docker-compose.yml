@@ -26,6 +26,7 @@ services:
 
   mysql:
     image: "mariadb"
+    restart: unless-stopped
     env_file: .env
     networks:
       - "back"
