@@ -6,6 +6,7 @@ services:
     image: penskemediacorporation/wpdev
     env_file: .env
     working_dir: "<%= wpDir %>/wp-content/themes/$WP_THEME"
+    restart: unless-stopped
     depends_on:
       - "mysql"
     networks:
@@ -25,13 +26,17 @@ services:
 
   mysql:
     image: "mariadb"
+    restart: unless-stopped
     env_file: .env
     networks:
       - "back"
 
   pipeline-build:
-    image: penskemediacorporation/pipeline-build:v2
+    image: penskemediacorporation/pipeline-build
     env_file: .env
+    environment:
+      PMC_CI_ENCODED_KEY: "$PMC_CI_ENCODED_KEY"
+    restart: on-failure
     working_dir: "<%= wpDir %>/wp-content/themes/$WP_THEME"
     volumes:
       - "./.cache/wp:<%= wpDir %>:rw"
@@ -43,10 +48,12 @@ services:
       - "back"
     depends_on:
       - mysql
+      - wp
 
   pipeline-test:
-    image: penskemediacorporation/pipeline-test:v2
+    image: penskemediacorporation/pipeline-test
     env_file: .env
+    restart: on-failure
     working_dir: "<%= wpDir %>/wp-content/themes/$WP_THEME"
     volumes:
       - "./.cache/wp:<%= wpDir %>:rw"

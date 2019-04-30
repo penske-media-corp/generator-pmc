@@ -17,12 +17,12 @@
 		},
 		"repositories": {
 			"pmc/pmc-plugins": {
-				"type": "vcs",
-				"url": "git@bitbucket.org:penskemediacorp/pmc-plugins.git"
+					"type": "vcs",
+					"url": "git@bitbucket.org:penskemediacorp/pmc-plugins.git"
 			},
 			<% if(wpHasParentTheme) { %>"pmc/<%= wpParentTheme %>": {
-				"type": "vcs",
-				"url": "git@bitbucket.org:penskemediacorp/<%= wpParentTheme %>.git"
+					"type": "vcs",
+					"url": "git@bitbucket.org:penskemediacorp/<%= wpParentTheme %>.git"
 			},<% } %>
 			<% if('wpCom' == wpHostType) { %>"pmc/vip-wpcom-mu-plugins": {
 				"type": "package",
