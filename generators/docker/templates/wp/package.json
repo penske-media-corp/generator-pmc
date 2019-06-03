@@ -1,0 +1,13 @@
+{
+	"name": "pmc-rollingstone-2018",
+	"version": "1.0.0",
+	"description": "Rolling Stone 2018",
+	"author": "PMC",
+	"homepage": "https://bitbucket.org/penskemediacorp/pmc-rollingstone-2018#readme",
+	"devDependencies": {
+		"@grvcoelho/lint-diff": "latest",
+		"eslint": "latest",
+		"eslint-config-wordpress": "latest",
+		"wp-pot-cli": "latest"
+	}
+}

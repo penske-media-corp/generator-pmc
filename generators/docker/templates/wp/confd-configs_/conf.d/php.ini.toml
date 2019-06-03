@@ -1,0 +1,6 @@
+[template]
+src = "php.ini.tmpl"
+dest = "/usr/local/etc/php/conf.d/php.ini"
+uid = 0
+gid = 0
+mode = "0644"

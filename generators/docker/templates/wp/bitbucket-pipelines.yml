@@ -1,3 +1,4 @@
+
 image:
   name: penskemediacorporation/pipeline-compose
   username: $DOCKERHUB_PIPELINE_USERNAME
@@ -8,42 +9,17 @@ options:
 pipelines:
   default:
     - step:
-        name: Build
+        name: Build & Test
         services:
           - docker
         caches:
           - composer
-          - composerlocal
           - docker
-          - localcache
           - node
         script:
-          - . /usr/local/bin/docker-entrypoint.sh && build
-    - step:
-        name: Test
-        services:
-          - docker
-        caches:
-          - composer
-          - composerlocal
-          - docker
-          - localcache
-          - node
-        script:
-          - . /usr/local/bin/docker-entrypoint.sh && test
-<% if (wpHasSvnDeploy) { %>
-    - step:
-        name: Deploy to VIP SVN
-        deployment: production
-        trigger: manual
-        image:
-          name: penskemediacorporation/pipeline-deploy
-          username: $DOCKERHUB_PIPELINE_USERNAME
-          password: $DOCKERHUB_PIPELINE_PASSWORD
-        script:
-          - source /usr/local/bin/start.sh<% } %>
+          - . /usr/local/bin/docker-entrypoint.sh && build_and_test
 
 definitions:
-  caches:
-    composerlocal: vendor
-    localcache: .cache
+  services:
+    docker:
+      memory: 2048

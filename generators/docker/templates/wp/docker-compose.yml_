@@ -1,0 +1,142 @@
+version: "3.7"
+
+services:
+
+  wp:
+    build:
+      context: "."
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: "${PHP_VERSION}"
+        WEB_ROOT: "${WEB_ROOT}"
+        WORDPRESS_VERSION: "${WORDPRESS_VERSION}"
+    # Defines where WP is installed
+    working_dir: "${WEB_ROOT}"
+    env_file: .env
+    restart: always
+    depends_on:
+      - db
+    networks:
+      - back
+      - front
+    volumes:
+      - "wp:${WEB_ROOT}:rw"
+      - "./:${WEB_ROOT}/wp-content/themes/${WORDPRESS_THEME}:rw"
+      - "./vendor/pmc/mu-plugins:${WEB_ROOT}/wp-content/mu-plugins:rw"
+      - "./vendor/pmc/plugins:${WEB_ROOT}/wp-content/plugins:rw"
+      - "./vendor/pmc/themes/${WORDPRESS_PARENT_THEME}:${WEB_ROOT}/wp-content/themes/${WORDPRESS_PARENT_THEME}:rw"
+
+  confd:
+    image: metal3d/confd
+    volumes:
+      - "${PWD}/confd-configs:/etc/confd/confd-configs"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    command: "-node ${WORDPRESS_DOMAIN}:4001"
+
+  server:
+    image: nginx:1.16-alpine
+    restart: always
+    depends_on:
+      - confd
+      - wp
+    links:
+      - wp
+    ports:
+      - 80
+      - 443
+    networks:
+      - back
+      - front
+      - pmc-dev_traefik
+    labels:
+      - 'traefik.enable=true'
+      - "traefik.frontend.rule=Host:${WORDPRESS_DOMAIN}"
+      - "traefik.docker.network=pmc-dev_traefik"
+    volumes:
+      - "wp:${WEB_ROOT}:rw"
+      - "./confd-configs:/etc/confd"
+      - "./confd-configs/templates/nginx.conf.tmpl:/etc/nginx/nginx.conf"
+
+  wp-cli:
+    image: "wordpress:cli-php${PHP_VERSION}"
+    env_file: .env
+    working_dir: "${WEB_ROOT}/wp-content/themes/${WORDPRESS_THEME}"
+    depends_on:
+      - db
+    networks:
+      - back
+    volumes:
+      - "wp:${WEB_ROOT}:rw"
+      - "./:${WEB_ROOT}/wp-content/themes/${WORDPRESS_THEME}:rw"
+      - "./vendor/pmc/mu-plugins:${WEB_ROOT}/wp-content/mu-plugins:rw"
+      - "./vendor/pmc/plugins:${WEB_ROOT}/wp-content/plugins:rw"
+      - "./vendor/pmc/themes/${WORDPRESS_PARENT_THEME}:${WEB_ROOT}/wp-content/themes/${WORDPRESS_PARENT_THEME}:rw"
+    command: >
+      sh -c ". ./dev.sh && install_wp" # Actually setup WORDPRESS
+
+  db:
+    image: "mariadb:${DB_VERSION}"
+    env_file: .env
+    restart: always
+    networks:
+      - back
+    volumes:
+      - db:/var/lib/mysql
+
+  memcached:
+    image: "memcached:1.5-alpine"
+    networks:
+      - back
+
+  pipeline-npm-build:
+    image: "node:${NODE_VERSION}-alpine"
+    working_dir: "${WEB_ROOT}"
+    volumes:
+      - "${PWD}:${WEB_ROOT}"
+    restart: on-failure
+    command: "yarn install"
+
+  # Needs to mount your user composer auth credentials for private repos
+  pipeline-composer-build:
+    image: composer:1.8.5
+    working_dir: "${WEB_ROOT}"
+    env_file: .env
+    volumes:
+      - "${PWD}:${WEB_ROOT}"
+      - "${HOME}/.cache/composer:${COMPOSER_CACHE_DIR}"
+      - "${HOME}/.config/composer:${COMPOSER_HOME}"
+      - "${SSH_AUTH_SOCK}:/ssh-auth.sock"
+    restart: on-failure
+    command: >
+      sh -c "composer install -vvv"
+  #
+  # pipeline-test:
+  #   image: pmc-rollingstone-2018_wp
+  #   env_file: .env
+  #   depends_on:
+  #     - "pipeline-db-test"
+  #   networks:
+  #     - "back-test"
+  #   volumes:
+  #     - "wp:${WEB_ROOT}:rw"
+  #
+  # pipeline-db-test:
+  #   image: "mariadb:${DB_VERSION}"
+  #   env_file: .env
+  #   restart: always
+  #   networks:
+  #     - back-test
+  #   volumes:
+  #     - db-test:/var/lib/mysql
+
+networks:
+  front: {}
+  back: {}
+  back-test: {}
+  pmc-dev_traefik:
+    external: true
+
+volumes:
+  wp: {}
+  db: {}
+  db-test: {}
