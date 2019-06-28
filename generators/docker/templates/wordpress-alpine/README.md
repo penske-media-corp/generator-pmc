@@ -2,7 +2,7 @@
 rollingstone.com
 ########################################
 
-WordPress theme for `rollingstone.com <https://www.rollingstone.com/>
+WordPress theme for `REPLACEME`
 
 .. contents::
 
@@ -11,8 +11,8 @@ WordPress theme for `rollingstone.com <https://www.rollingstone.com/>
 Main features
 =============
 
-* Hosted on VIPGO
-* Uses parent theme pmc-core-v2
+* Hosted on `REPLACE ME`
+* Uses parent theme pmc-core-v2`
 
 Installation
 ============

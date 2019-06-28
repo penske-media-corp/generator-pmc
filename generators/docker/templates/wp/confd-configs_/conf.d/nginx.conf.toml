@@ -1,8 +1,0 @@
-[template]
-src = "nginx.tmpl"
-dest = "/etc/nginx/nginx.conf"
-uid = 33
-gid = 33
-owner = "nginx"
-mode = "0644"
-reload_cmd = "/usr/sbin/service nginx reload"
