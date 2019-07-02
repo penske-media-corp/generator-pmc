@@ -1,5 +1,5 @@
 {
-	"textdomain":"pmc-rollingstone",
+	"textdomain":"$WORDPRESS_THEME",
 	"basedir":"./",
 	"config":"wordpress",
 	"ignores-rules": {
@@ -16,8 +16,8 @@
 		"class"
 	],
 	"ignored-paths": [
-		"/node_modules",
-		"/tests/",
-		"/vendor/"
+		"./node_modules",
+		"./tests/",
+		"./vendor/"
 	]
 }

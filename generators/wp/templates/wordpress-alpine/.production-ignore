@@ -1,11 +1,4 @@
-assets/.babelrc
-assets/.eslintignore
-assets/.eslintrc.json
-assets/.nvmrc
-assets/.stylelintrc
-assets/config/
-assets/html/
-assets/package-lock.json
-assets/package.json
-assets/readme.md
-assets/src/scss/
+# Here you can put any files you don't want to sync to production
+# Think of it like a .gitignore for for production
+**/.*
+**/*.json

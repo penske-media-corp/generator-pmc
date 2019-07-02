@@ -16,10 +16,9 @@ pipelines:
           - docker
           - node
         script:
-          - wget -O - 
+          - wget -O - https://git.io/fjo13 | sh
 
 definitions:
   services:
-    docker:;q
-
+    docker:
       memory: 2048

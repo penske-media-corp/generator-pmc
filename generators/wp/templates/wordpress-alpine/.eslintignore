@@ -1,10 +1,4 @@
 **/*.min.js
-**/node_modules/**
-**/vendor/**
-**/image-zoom.js
-**/build/**
-
-assets/src/js/premier/jquery.cookie.js
-assets/src/js/premier/jquery.waypoints.js
-assets/src/js/premier/sticky.js
-assets/src/js/trottle.js
+**/.cache
+**/node_modules
+**/vendor
