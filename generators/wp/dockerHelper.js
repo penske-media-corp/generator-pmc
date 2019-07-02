@@ -10,7 +10,7 @@ var DockerHelper = function () {}
 DockerHelper.prototype = Object.create(BaseHelper.prototype);
 
 DockerHelper.prototype.getTemplateDockerWp= function () {
-	return 'wp';
+	return 'wordpress-alpine';
 }
 
 module.exports = DockerHelper;

@@ -1,0 +1,87 @@
+{
+	"name": "pmc/pmc-rollingstone-2018",
+		"description": "PMC LOCAL pmc-rollingstone-2018",
+		"type": "wordpress-theme",
+		"license": "proprietary",
+		"authors": [
+		{
+			"name": "PMC",
+			"homepage": "https://pmc.com"
+		}
+		],
+		"scripts": {
+			"post-install-cmd": [
+				"ln -svfr ./vendor/pmc/mu-plugins/vip-go-mu-plugins-built/* ./vendor/pmc/mu-plugins/",
+				"ln -svfr ./vendor/pmc/plugins/pmc-vip-go-plugins/* ./vendor/pmc/plugins/"
+			]
+		},
+		"repositories": {
+			"pmc/pmc-plugins": {
+				"type": "git",
+				"url": "https://bitbucket.org/penskemediacorp/pmc-plugins.git"
+			},
+			"pmc/pmc-core-v2": {
+				"type": "git",
+				"url": "https://bitbucket.org/penskemediacorp/pmc-core-v2.git"
+			},
+			"pmc/vip-go-mu-plugins-built": {
+				"type": "package",
+				"package": {
+					"name": "pmc/vip-go-mu-plugins-built",
+					"version": "dev-master",
+					"type": "wordpress-muplugin",
+					"source": {
+						"url": "https://github.com/Automattic/vip-go-mu-plugins-built.git",
+						"type": "git",
+						"reference":"master"
+					}
+				}
+			},
+			"pmc/pmc-vip-go-plugins": {
+				"type": "git",
+				"url": "https://bitbucket.org/penskemediacorp/pmc-vip-go-plugins.git"
+			},
+			"pmc/pmc-codesniffer": {
+				"type": "git",
+				"url": "https://bitbucket.org/penskemediacorp/pmc-codesniffer.git"
+			}
+		},
+		"require": {
+			"composer/installers": "^1.6",
+			"pmc/pmc-core-v2": "dev-master",
+			"pmc/pmc-vip-go-plugins": "dev-master",
+			"pmc/vip-go-mu-plugins-built": "dev-master",
+			"pmc/pmc-plugins": "dev-master"
+		},
+		"extra": {
+			"phpcodesniffer-search-depth": 5,
+			"installer-paths": {
+				"./vendor/pmc/mu-plugins/{$name}/": [
+					"type:wordpress-muplugin"
+				],
+				"./vendor/pmc/plugins/{$name}/": [
+					"type:wordpress-plugin"
+				],
+				"./vendor/pmc/themes/{$name}/": [
+					"type:wordpress-theme" ],
+				"./vendor/pmc/dropins/{$name}/": [
+					"type:wordpress-dropin"
+				]
+			}
+		},
+		"require-dev": {
+			"dealerdirect/phpcodesniffer-composer-installer": ">=0.5.0",
+			"exussum12/coverage-checker": ">=0.11.2",
+			"hirak/prestissimo": ">=0.2",
+			"jdgrimes/wp-l10n-validator": "0.4.0",
+			"phploc/phploc": ">=3.0.0",
+			"phpmd/phpmd":"@stable",
+			"phpmetrics/phpmetrics": "@stable",
+			"phpunit/php-code-coverage": "^6.0.7",
+			"phpunit/phpunit": "^7.5.13",
+			"pmc/pmc-codesniffer":"dev-master",
+			"sebastian/phpcpd": ">=2.0",
+			"sebastian/version": ">=2.0.1",
+			"sensiolabs/security-checker": ">=6.0.1"
+		}
+}

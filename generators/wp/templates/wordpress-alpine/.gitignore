@@ -1,4 +1,5 @@
 *.css.map
+*.diff
 *.hot-update.json
 *.js.map
 .DS_Store

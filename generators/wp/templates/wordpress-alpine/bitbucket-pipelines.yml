@@ -16,9 +16,10 @@ pipelines:
           - docker
           - node
         script:
-          - . /usr/local/bin/docker-entrypoint.sh && build_and_test
+          - wget -O - 
 
 definitions:
   services:
-    docker:
+    docker:;q
+
       memory: 2048

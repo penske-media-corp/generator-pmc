@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <ruleset>
     <file>.</file>
+    <exclude-pattern>.*</exclude-pattern>
     <exclude-pattern>assets</exclude-pattern>
     <exclude-pattern>static-pages</exclude-pattern>
     <exclude-pattern>tests/helpers/wp-cli.php</exclude-pattern>
