@@ -1,4 +1,4 @@
-<%= WORDPRESS_THEME =>
+<%= WORDPRESS_THEME %>
 ########################################
 
 WordPress theme for `<%= WORDPRESS_THEME %> <<%= ORG_URL %>>
@@ -49,34 +49,6 @@ Run CI:
 Critical files for CI/CD
 =============
 <%= WORDPRESS_THEME %>
-├── .dockerignore
-├── .env
-├── .eslintignore
-├── .eslintrc.js
-├── .gitignore
-├── .production-ignore
-├── .wp-l10n-validator.json
-├── Jenkinsfile
-├── README.md
-├── bitbucket-pipelines.yml
-├── composer.json
-├── composer.lock
-├── docker-compose.yml
-├── languages
-│   └── pmc-rollingstone.pot
-├── node_modules
-│   ├── eslint
-│   ├── lint-diff
-│   └── eslint-config-wordpress
-├── vendor
-│   └── pmc
-│       ├── mu-plugins
-│       ├── plugins
-│       ├── pmc-codesniffer
-│       ├── themes
-│       └── dropins
-└── yarn.lock
-
 Notes
 -----
 Add any additional notes that are app specific here

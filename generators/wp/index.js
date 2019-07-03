@@ -75,13 +75,13 @@ function showPrompts() {
 		message: 'WordPress host environment?',
 		choices: [{
 			name: 'Self hosted',
-			value: 'SELF_HOSTED'
+			value: 'self-hosted'
 		},{
 			name: 'WPCom',
-			value: 'WORDPRESS_WPCOM'
+			value: 'wordpress-wpcom'
 		},{
 			name: 'WordPress VIP Go',
-			value: 'WORDPRESS_VIP_GO'
+			value: 'wordpress-vip-go'
 		}]
 	}, {
 		type: 'input',
@@ -121,7 +121,7 @@ function showPrompts() {
 			message: 'WordPress Multisite?',
 			default: false
 		}, {
-			type: 'confirm',
+			type: 'input',
 			name: 'NGINX_VERSION',
 			message: 'nginx version?',
 			default: NGINX_VERSION
@@ -403,7 +403,7 @@ var DockerGenerator = yeoman.generators.Base.extend({
 	},
 
 	init: function () {
-		this.log(yosay( chalk.red('PMC Docker') + ' generator!'));
+		this.log(yosay( chalk.red('PMC WordPress') + '\n ------ \n yo generator!'));
 	},
 	askFor: showPrompts,
 	writing: function () {
