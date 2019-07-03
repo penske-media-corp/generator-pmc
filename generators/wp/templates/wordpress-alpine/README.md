@@ -17,7 +17,7 @@ Installation
 
 Dev
 -----
-Start up the project first by building the docker image:
+Start up the app first by building the docker image:
 
 .. code-block:: sh
     docker-compose up --build -d --force-recreate --remove-orphans
@@ -79,4 +79,4 @@ Critical files for CI/CD
 
 Notes
 -----
-Add any additional notes that are theme specific here
+Add any additional notes that are app specific here
