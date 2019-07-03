@@ -51,7 +51,7 @@ var WORDPRESS_DB_PASSWORD      = 'wp';
 var WORDPRESS_DB_USER          = 'wp';
 var WORDPRESS_DOMAIN           = process.cwd().split(path.sep).pop().toLowerCase() + '.pmcdev.local';
 var WORDPRESS_EMAIL            = 'dist.dev@pmc.com';
-var WORDPRESS_HOST_ENVIRONMENT = 'dev';
+var WORDPRESS_HOST_ENVIRONMENT = '';
 var WORDPRESS_PARENT_THEME     = 'pmc-core-v2';
 var WORDPRESS_TABLE_PREFIX     = 'wp_';
 var WORDPRESS_TEST_DB_HOST     = 'test-wp';
@@ -75,10 +75,10 @@ function showPrompts() {
 		message: 'WordPress host environment?',
 		choices: [{
 			name: 'Self hosted',
-			value: 'selfHosted'
+			value: 'SELF_HOSTED'
 		},{
 			name: 'WPCom',
-			value: 'WORDPRESS_COM'
+			value: 'WORDPRESS_WPCOM'
 		},{
 			name: 'WordPress VIP Go',
 			value: 'WORDPRESS_VIP_GO'
