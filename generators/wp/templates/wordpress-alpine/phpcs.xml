@@ -5,7 +5,6 @@
     <exclude-pattern>assets</exclude-pattern>
     <exclude-pattern>static-pages</exclude-pattern>
     <exclude-pattern>tests/helpers/wp-cli.php</exclude-pattern>
-    <rule ref="PmcWpVip">
-        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+    <rule ref="pmcwpvip">
     </rule>
 </ruleset>

@@ -67,7 +67,7 @@ services:
         WEB_ROOT: "${WEB_ROOT}"
         WORDPRESS_VERSION: "${WORDPRESS_VERSION}"
     command: >
-      sh -c "wget -O - https://git.io/fjo1U | sh"
+      sh -c "wget -O - https://raw.githubusercontent.com/penske-media-corp/_ss-wordpress/master/wp-cli/_ss-install-wp.sh | sh"
     env_file: .env
     networks:
       - back
@@ -135,7 +135,7 @@ services:
         WEB_ROOT: "${WEB_ROOT}"
         WORDPRESS_VERSION: "${WORDPRESS_VERSION}"
     command: >
-      sh -c "wget -O - https://git.io/fjo1J | sh"
+      sh -c "wget -O - https://raw.githubusercontent.com/penske-media-corp/_ss-wordpress/master/npm/_ss-run-npm-ci.sh | sh"
     env_file: .env
     restart: on-failure
     volumes:
@@ -154,13 +154,13 @@ services:
         WORDPRESS_VERSION: "${WORDPRESS_VERSION}"
     # Defines where WP is installed
     command: >
-      sh -c "wget --no-cache -O - https://git.io/fjo1v | sh \
-             && wget --no-cache -O - https://git.io/fjo1T | sh \
-             && wget --no-cache -O - https://git.io/fjo1k | sh \
-             && wget --no-cache -O - https://git.io/fjo1I | sh \
-             && wget --no-cache -O - https://git.io/fjo1L | sh \
-             && wget --no-cache -O - https://git.io/fjo1q | sh \
-             && wget --no-cache -O - https://git.io/fjo1t | sh"
+      sh -c "wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/_ss-wordpress/master/global/_ss-setup-diff.sh | sh \
+             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/_ss-wordpress/master/php/_ss-run-phplint.sh | sh \
+             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/_ss-wordpress/master/php/_ss-run-phpcs.sh | sh \
+             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/_ss-wordpress/master/php/_ss-setup-xdebug.sh | sh \
+             j& wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/_ss-wordpress/master/php/_ss-setup-phpunit.sh | sh \
+             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/_ss-wordpress/master/php/_ss-run-phpunit.sh | sh \
+             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/_ss-wordpress/master/php/_ss-run-codecov.sh | sh"
     depends_on:
       - test-db
     environment:
