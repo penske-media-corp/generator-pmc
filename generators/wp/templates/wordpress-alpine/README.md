@@ -6,7 +6,6 @@ WordPress theme for `<%= WORDPRESS_THEME %> <<%= ORG_URL %>>
 APP Details
 =============
 
-* Hosted on <%= WORDPRESS_HOST_ENVIRONMENT %>
 <% if(WORDPRESS_PARENT_THEME) { %>* Parent theme <%= WORDPRESS_PARENT_THEME %><% } %>
 
 Installation
@@ -44,7 +43,7 @@ Run tests:
 
 Run CI:
 .. code-block:: sh
-    wget --no-cache -O - https://git.io/fjo13 | sh
+    wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/_ss-wordpress/master/global/_ss-ci.sh | sh
 
 Critical files for CI/CD
 =============

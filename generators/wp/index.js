@@ -11,79 +11,65 @@ var yosay          = require('yosay');
 var DockerHelper   = require('./dockerHelper.js');
 var error          = false;
 
-var APP_ENV                    = 'dev';
-var COMPOSER_CACHE_DIR         = '/root/.cache/composer';
-var COMPOSER_HOME              = '/root/.config/composer';
-var COMPOSER_VENDOR_DIR        = './vendor';
-var COMPOSER_VERSION           = '1.8.5';
-var DB_VERSION                 = '10.3';
-var DIFF_FILE                  = '/tmp/' + process.cwd().split(path.sep).pop().toLowerCase() + '.diff';
-var DIFF_FILE_CSS              = '/tmp/' + process.cwd().split(path.sep).pop().toLowerCase() + 'css.diff';
-var DIFF_FILE_JS               = '/tmp/' + process.cwd().split(path.sep).pop().toLowerCase() + 'js.diff';
-var DIFF_FILE_PHP              = '/tmp/' + process.cwd().split(path.sep).pop().toLowerCase() + 'php.diff';
-var DIFF_FILE_SCSS             = '/tmp/' + process.cwd().split(path.sep).pop().toLowerCase() + 'scss.diff';
-var JETPACK_DEV_DEBUG          = true;
-var MARIADB_HOST               = 'db';
-var MARIADB_PORT_NUMBER        = '3306';
-var MEMCACHED_VERSION          = '1.5';
-var MULTISITE                  = false;
-var MYSQL_DATABASE             = 'wp';
-var MYSQL_PASSWORD             = 'wp';
-var MYSQL_ROOT_PASSWORD        = 'wp';
-var MYSQL_USER                 = 'wp';
-var MYSQL_VOLUMES              = './.cache/mysql';
-var NGINX_VERSION              = '1.16';
-var NODE_VERSION               = '10.13.0';
-var ORG                        = 'penskemediacorp';
-var ORG_URL                    = 'https://pmc.com/contact';
-var PHPCS_FILE                 = '/tmp/phpcs.json';
-var PHPCS_STANDARD             = 'PmcWpVip';
-var PHPUNIT_EXCLUDE_GROUPS     = 'pmc-phpunit-ignore-failed';
-var PHP_VERSION                = '7.3';
-var TEXT_DOMAIN                = process.cwd().split(path.sep).pop().toLowerCase();
-var WEB_ROOT                   = '/var/www/html';
-var WORDPRESS_ADMIN_PASSWORD   = 'wp';
-var WORDPRESS_ADMIN_USER       = 'wp';
-var WORDPRESS_CACHE            = './.cache/wp';
-var WORDPRESS_DB_HOST          = 'db';
-var WORDPRESS_DB_NAME          = 'wp';
-var WORDPRESS_DB_PASSWORD      = 'wp';
-var WORDPRESS_DB_USER          = 'wp';
-var WORDPRESS_DOMAIN           = process.cwd().split(path.sep).pop().toLowerCase() + '.pmcdev.local';
-var WORDPRESS_EMAIL            = 'dist.dev@pmc.com';
-var WORDPRESS_HOST_ENVIRONMENT = '';
-var WORDPRESS_PARENT_THEME     = 'pmc-core-v2';
-var WORDPRESS_TABLE_PREFIX     = 'wp_';
-var WORDPRESS_TEST_DB_HOST     = 'test-wp';
-var WORDPRESS_THEME            = process.cwd().split(path.sep).pop().toLowerCase();
-var WORDPRESS_TITLE            = process.cwd().split(path.sep).pop().toLowerCase();
-var WORDPRESS_VERSION          = '5.2';
-var WP_TESTS_CONFIG_FILE_PATH  = '/var/www/html/wp-tests/tests/phpunit';
-var XDEBUG_IDEKEY              = process.cwd().split(path.sep).pop().toLowerCase();
-var XDEBUG_REMOTE_AUTOSTART    = '1';
-var XDEBUG_REMOTE_CONNECT_BACK = '0';
-var XDEBUG_REMOTE_ENABLE       = '1';
-var XDEBUG_REMOTE_HANDLER      = 'dbpg';
-var XDEBUG_REMOTE_HOST         = '172.30.0.1';
-var XDEBUG_REMOTE_PORT         = '9000';
+var APP_ENV                         = 'dev';
+var COMPOSER_CACHE_DIR              = '/root/.cache/composer';
+var COMPOSER_HOME                   = '/root/.config/composer';
+var COMPOSER_VENDOR_DIR             = './vendor';
+var COMPOSER_VERSION                = '1.8.5';
+var DB_VERSION                      = '10.3';
+var DIFF_FILE                       = '/tmp/' + process.cwd().split(path.sep).pop().toLowerCase() + '.diff';
+var DIFF_FILE_CSS                   = '/tmp/' + process.cwd().split(path.sep).pop().toLowerCase() + 'css.diff';
+var DIFF_FILE_JS                    = '/tmp/' + process.cwd().split(path.sep).pop().toLowerCase() + 'js.diff';
+var DIFF_FILE_PHP                   = '/tmp/' + process.cwd().split(path.sep).pop().toLowerCase() + 'php.diff';
+var DIFF_FILE_SCSS                  = '/tmp/' + process.cwd().split(path.sep).pop().toLowerCase() + 'scss.diff';
+var JETPACK_DEV_DEBUG               = true;
+var MARIADB_HOST                    = 'db';
+var MARIADB_PORT_NUMBER             = '3306';
+var MEMCACHED_VERSION               = '1.5';
+var MULTISITE                       = false;
+var MYSQL_DATABASE                  = 'wp';
+var MYSQL_PASSWORD                  = 'wp';
+var MYSQL_ROOT_PASSWORD             = 'wp';
+var MYSQL_USER                      = 'wp';
+var MYSQL_VOLUMES                   = './.cache/mysql';
+var NGINX_VERSION                   = '1.16';
+var NODE_VERSION                    = '10.13.0';
+var ORG                             = 'penskemediacorp';
+var ORG_URL                         = 'https://pmc.com/contact';
+var PHPCS_FILE                      = '/tmp/phpcs.json';
+var PHPCS_STANDARD                  = 'PmcWpVip';
+var PHPUNIT_EXCLUDE_GROUPS          = 'pmc-phpunit-ignore-failed';
+var PHP_VERSION                     = '7.3';
+var TEXT_DOMAIN                     = process.cwd().split(path.sep).pop().toLowerCase();
+var WEB_ROOT                        = '/var/www/html';
+var WORDPRESS_ADMIN_PASSWORD        = 'wp';
+var WORDPRESS_ADMIN_USER            = 'wp';
+var WORDPRESS_CACHE                 = './.cache/wp';
+var WORDPRESS_COMPOSER_PACKAGE_TYPE = '';
+var WORDPRESS_DB_HOST               = 'db';
+var WORDPRESS_DB_NAME               = 'wp';
+var WORDPRESS_DB_PASSWORD           = 'wp';
+var WORDPRESS_DB_USER               = 'wp';
+var WORDPRESS_DOMAIN                = process.cwd().split(path.sep).pop().toLowerCase() + '.pmcdev.local';
+var WORDPRESS_EMAIL                 = 'dist.dev@pmc.com';
+var WORDPRESS_PARENT_THEME          = 'pmc-core-v2';
+var WORDPRESS_TABLE_PREFIX          = 'wp_';
+var WORDPRESS_TEST_DB_HOST          = 'test-wp';
+var WORDPRESS_THEME                 = process.cwd().split(path.sep).pop().toLowerCase();
+var WORDPRESS_TITLE                 = process.cwd().split(path.sep).pop().toLowerCase();
+var WORDPRESS_VERSION               = '5.2';
+var WP_TESTS_CONFIG_FILE_PATH       = '/var/www/html/wp-tests/tests/phpunit';
+var XDEBUG_IDEKEY                   = process.cwd().split(path.sep).pop().toLowerCase();
+var XDEBUG_REMOTE_AUTOSTART         = '1';
+var XDEBUG_REMOTE_CONNECT_BACK      = '0';
+var XDEBUG_REMOTE_ENABLE            = '1';
+var XDEBUG_REMOTE_HANDLER           = 'dbpg';
+var XDEBUG_REMOTE_HOST              = '172.30.0.1';
+var XDEBUG_REMOTE_PORT              = '9000';
 
 function showPrompts() {
 	var done = this.async();
 	var prompts = [{
-		type: 'list',
-		name: 'WORDPRESS_HOST_ENVIRONMENT',
-		message: 'WordPress host environment?',
-		choices: [{
-			name: 'Self hosted',
-			value: 'self-hosted'
-		},{
-			name: 'WPCom',
-			value: 'wordpress-wpcom'
-		},{
-			name: 'WordPress VIP Go',
-			value: 'wordpress-vip-go'
-		}]
-	}, {
 		type: 'input',
 		name: 'APP_ENV',
 		message: 'Default WordPress dev environment?',
@@ -91,7 +77,7 @@ function showPrompts() {
 		}, {
 		type: 'list',
 		name: 'WORDPRESS_COMPOSER_PACKAGE_TYPE',
-		message: 'WordPress composer packag type?',
+		message: 'WordPress composer package type?',
 		choices: [{
 				name: 'Dropin',
 				value: 'dropin'
@@ -205,16 +191,6 @@ function showPrompts() {
 			default: WORDPRESS_EMAIL
 		}, {
 			type: 'input',
-			name: 'WORDPRESS_HOST_ENVIRONMENT',
-			message: 'Default WordPress host environment?',
-			default: function (answers) {
-				return answers.WORDPRESS_HOST_ENVIRONMENT;
-			},
-			when: function (answers) {
-				return answers.WORDPRESS_HOST_ENVIRONMENT;
-			}
-		}, {
-			type: 'input',
 			name: 'WORDPRESS_PARENT_THEME',
 			message: 'Default WordPress parent theme? ( leave blank if none )',
 			default: WORDPRESS_PARENT_THEME
@@ -246,122 +222,122 @@ function showPrompts() {
 	}];
 
 	this.prompt(prompts, function (props) {
-		APP_ENV                    = props.APP_ENV;
-		COMPOSER_CACHE_DIR         = props.COMPOSER_CACHE_DIR;
-		COMPOSER_HOME              = props.COMPOSER_HOME;
-		COMPOSER_VENDOR_DIR        = props.COMPOSER_VENDOR_DIR;
-		COMPOSER_VERSION           = props.COMPOSER_VERSION;
-		DB_VERSION                 = props.DB_VERSION;
-		DIFF_FILE                  = props.DIFF_FILE;
-		DIFF_FILE_CSS              = props.DIFF_FILE_CSS;
-		DIFF_FILE_JS               = props.DIFF_FILE_JS;
-		DIFF_FILE_PHP              = props.DIFF_FILE_PHP;
-		DIFF_FILE_SCSS             = props.DIFF_FILE_SCSS;
-		MEMCACHED_VERSION          = props.MEMCACHED_VERSION;
-		MULTISITE                  = props.MULTISITE;
-		MYSQL_DATABASE             = props.MYSQL_DATABASE;
-		MYSQL_PASSWORD             = props.MYSQL_PASSWORD;
-		MYSQL_ROOT_PASSWORD        = props.MYSQL_ROOT_PASSWORD;
-		MYSQL_USER                 = props.MYSQL_USER;
-		JETPACK_DEV_DEBUG          = props.JETPACK_DEV_DEBUG;
-		MYSQL_VOLUMES              = props.MYSQL_VOLUMES;
-		NGINX_VERSION              = props.NGINX_VERSION;
-		NODE_VERSION               = props.NODE_VERSION;
-		ORG                        = props.ORG;
-		ORG_URL                    = props.ORG_URL;
-		PHPCS_STANDARD             = props.PHPCS_STANDARD;
-		PHPCS_FILE             = props.PHPCS_FILE;
-		MARIADB_HOST               = props.MARIADB_HOST;
-		MARIADB_PORT_NUMBER        = props.MARIADB_PORT_NUMBER;
-		PHP_VERSION                = props.PHP_VERSION;
-		TEXT_DOMAIN                = props.TEXT_DOMAIN;
-		WEB_ROOT                   = props.WEB_ROOT;
-		WORDPRESS_ADMIN_PASSWORD   = props.WORDPRESS_ADMIN_PASSWORD;
-		WORDPRESS_ADMIN_USER       = props.WORDPRESS_ADMIN_USER;
-		WORDPRESS_CACHE            = props.WORDPRESS_CACHE;
-		WORDPRESS_DB_HOST          = props.WORDPRESS_DB_HOST;
-		WORDPRESS_DB_NAME          = props.WORDPRESS_DB_NAME;
-		WORDPRESS_DB_PASSWORD      = props.WORDPRESS_DB_PASSWORD;
-		WORDPRESS_DB_USER          = props.WORDPRESS_DB_USER;
-		PHPUNIT_EXCLUDE_GROUPS     = props.PHPUNIT_EXCLUDE_GROUPS;
-		WORDPRESS_DOMAIN           = props.WORDPRESS_DOMAIN;
-		WORDPRESS_EMAIL            = props.WORDPRESS_EMAIL;
-		WORDPRESS_HOST_ENVIRONMENT = props.WORDPRESS_HOST_ENVIRONMENT;
-		WORDPRESS_PARENT_THEME     = props.WORDPRESS_PARENT_THEME;
-		WORDPRESS_TABLE_PREFIX     = props.WORDPRESS_TABLE_PREFIX;
-		WORDPRESS_TEST_DB_HOST     = props.WORDPRESS_TEST_DB_HOST;
-		WORDPRESS_THEME            = props.WORDPRESS_THEME;
-		WORDPRESS_TITLE            = props.WORDPRESS_TITLE;
-		WP_TESTS_CONFIG_FILE_PATH  = props.WP_TESTS_CONFIG_FILE_PATH;
-		WORDPRESS_VERSION          = props.WORDPRESS_VERSION;
-		XDEBUG_IDEKEY              = XDEBUG_IDEKEY;
-		XDEBUG_REMOTE_AUTOSTART    = XDEBUG_REMOTE_AUTOSTART;
-		XDEBUG_REMOTE_CONNECT_BACK = XDEBUG_REMOTE_CONNECT_BACK;
-		XDEBUG_REMOTE_ENABLE       = XDEBUG_REMOTE_ENABLE;
-		XDEBUG_REMOTE_HANDLER      = XDEBUG_REMOTE_HANDLER;
-		XDEBUG_REMOTE_HOST         = XDEBUG_REMOTE_HOST;
-		XDEBUG_REMOTE_PORT         = XDEBUG_REMOTE_PORT
+		APP_ENV                         = props.APP_ENV;
+		COMPOSER_CACHE_DIR              = props.COMPOSER_CACHE_DIR;
+		COMPOSER_HOME                   = props.COMPOSER_HOME;
+		COMPOSER_VENDOR_DIR             = props.COMPOSER_VENDOR_DIR;
+		COMPOSER_VERSION                = props.COMPOSER_VERSION;
+		DB_VERSION                      = props.DB_VERSION;
+		DIFF_FILE                       = props.DIFF_FILE;
+		DIFF_FILE_CSS                   = props.DIFF_FILE_CSS;
+		DIFF_FILE_JS                    = props.DIFF_FILE_JS;
+		DIFF_FILE_PHP                   = props.DIFF_FILE_PHP;
+		DIFF_FILE_SCSS                  = props.DIFF_FILE_SCSS;
+		MEMCACHED_VERSION               = props.MEMCACHED_VERSION;
+		MULTISITE                       = props.MULTISITE;
+		MYSQL_DATABASE                  = props.MYSQL_DATABASE;
+		MYSQL_PASSWORD                  = props.MYSQL_PASSWORD;
+		MYSQL_ROOT_PASSWORD             = props.MYSQL_ROOT_PASSWORD;
+		MYSQL_USER                      = props.MYSQL_USER;
+		JETPACK_DEV_DEBUG               = props.JETPACK_DEV_DEBUG;
+		MYSQL_VOLUMES                   = props.MYSQL_VOLUMES;
+		NGINX_VERSION                   = props.NGINX_VERSION;
+		NODE_VERSION                    = props.NODE_VERSION;
+		ORG                             = props.ORG;
+		ORG_URL                         = props.ORG_URL;
+		PHPCS_STANDARD                  = props.PHPCS_STANDARD;
+		PHPCS_FILE                      = props.PHPCS_FILE;
+		MARIADB_HOST                    = props.MARIADB_HOST;
+		MARIADB_PORT_NUMBER             = props.MARIADB_PORT_NUMBER;
+		PHP_VERSION                     = props.PHP_VERSION;
+		TEXT_DOMAIN                     = props.TEXT_DOMAIN;
+		WEB_ROOT                        = props.WEB_ROOT;
+		WORDPRESS_ADMIN_PASSWORD        = props.WORDPRESS_ADMIN_PASSWORD;
+		WORDPRESS_ADMIN_USER            = props.WORDPRESS_ADMIN_USER;
+		WORDPRESS_CACHE                 = props.WORDPRESS_CACHE;
+		WORDPRESS_DB_HOST               = props.WORDPRESS_DB_HOST;
+		WORDPRESS_COMPOSER_PACKAGE_TYPE = props.WORDPRESS_COMPOSER_PACKAGE_TYPE;
+		WORDPRESS_DB_NAME               = props.WORDPRESS_DB_NAME;
+		WORDPRESS_DB_PASSWORD           = props.WORDPRESS_DB_PASSWORD;
+		WORDPRESS_DB_USER               = props.WORDPRESS_DB_USER;
+		PHPUNIT_EXCLUDE_GROUPS          = props.PHPUNIT_EXCLUDE_GROUPS;
+		WORDPRESS_DOMAIN                = props.WORDPRESS_DOMAIN;
+		WORDPRESS_EMAIL                 = props.WORDPRESS_EMAIL;
+		WORDPRESS_PARENT_THEME          = props.WORDPRESS_PARENT_THEME;
+		WORDPRESS_TABLE_PREFIX          = props.WORDPRESS_TABLE_PREFIX;
+		WORDPRESS_TEST_DB_HOST          = props.WORDPRESS_TEST_DB_HOST;
+		WORDPRESS_THEME                 = props.WORDPRESS_THEME;
+		WORDPRESS_TITLE                 = props.WORDPRESS_TITLE;
+		WP_TESTS_CONFIG_FILE_PATH       = props.WP_TESTS_CONFIG_FILE_PATH;
+		WORDPRESS_VERSION               = props.WORDPRESS_VERSION;
+		XDEBUG_IDEKEY                   = props.XDEBUG_IDEKEY;
+		XDEBUG_REMOTE_AUTOSTART         = props.XDEBUG_REMOTE_AUTOSTART;
+		XDEBUG_REMOTE_CONNECT_BACK      = props.XDEBUG_REMOTE_CONNECT_BACK;
+		XDEBUG_REMOTE_ENABLE            = props.XDEBUG_REMOTE_ENABLE;
+		XDEBUG_REMOTE_HANDLER           = props.XDEBUG_REMOTE_HANDLER;
+		XDEBUG_REMOTE_HOST              = props.XDEBUG_REMOTE_HOST;
+		XDEBUG_REMOTE_PORT              = props.XDEBUG_REMOTE_PORT;
 		done();
 	}.bind(this));
 }
 
 function getDefaultTemplateData() {
 	return {
-		APP_ENV                    : APP_ENV,
-		COMPOSER_CACHE_DIR         : COMPOSER_CACHE_DIR,
-		COMPOSER_HOME              : COMPOSER_HOME,
-		COMPOSER_VENDOR_DIR        : COMPOSER_VENDOR_DIR,
-		MARIADB_HOST               : MARIADB_HOST,
-		MARIADB_PORT_NUMBER        : MARIADB_PORT_NUMBER,
-		COMPOSER_VERSION           : COMPOSER_VERSION,
-		DB_VERSION                 : DB_VERSION,
-		DIFF_FILE                  : DIFF_FILE,
-		DIFF_FILE_CSS              : DIFF_FILE_CSS,
-		DIFF_FILE_JS               : DIFF_FILE_JS,
-		DIFF_FILE_PHP              : DIFF_FILE_PHP,
-		DIFF_FILE_SCSS             : DIFF_FILE_SCSS,
-		JETPACK_DEV_DEBUG          : JETPACK_DEV_DEBUG,
-		MEMCACHED_VERSION          : MEMCACHED_VERSION,
-		MULTISITE                  : MULTISITE,
-		MYSQL_DATABASE             : MYSQL_DATABASE,
-		MYSQL_PASSWORD             : MYSQL_PASSWORD,
-		MYSQL_ROOT_PASSWORD        : MYSQL_ROOT_PASSWORD,
-		MYSQL_USER                 : MYSQL_USER,
-		MYSQL_VOLUMES              : MYSQL_VOLUMES,
-		NGINX_VERSION              : NGINX_VERSION,
-		NODE_VERSION               : NODE_VERSION,
-		ORG                        : ORG,
-		ORG_URL                    : ORG_URL,
-		PHPCS_FILE             : PHPCS_FILE,
-		PHPCS_STANDARD             : PHPCS_STANDARD,
-		PHPUNIT_EXCLUDE_GROUPS     : PHPUNIT_EXCLUDE_GROUPS,
-		PHP_VERSION                : PHP_VERSION,
-		TEXT_DOMAIN                : TEXT_DOMAIN,
-		WEB_ROOT                   : WEB_ROOT,
-		WORDPRESS_ADMIN_PASSWORD   : WORDPRESS_ADMIN_PASSWORD,
-		WORDPRESS_ADMIN_USER       : WORDPRESS_ADMIN_USER,
-		WORDPRESS_CACHE            : WORDPRESS_CACHE,
-		WORDPRESS_DB_HOST          : WORDPRESS_DB_HOST,
-		WORDPRESS_DB_NAME          : WORDPRESS_DB_NAME,
-		WORDPRESS_DB_PASSWORD      : WORDPRESS_DB_PASSWORD,
-		WORDPRESS_DB_USER          : WORDPRESS_DB_USER,
-		WORDPRESS_DOMAIN           : WORDPRESS_DOMAIN,
-		WORDPRESS_EMAIL            : WORDPRESS_EMAIL,
-		WORDPRESS_HOST_ENVIRONMENT : WORDPRESS_HOST_ENVIRONMENT,
-		WORDPRESS_PARENT_THEME     : WORDPRESS_PARENT_THEME,
-		WORDPRESS_TABLE_PREFIX     : WORDPRESS_TABLE_PREFIX,
-		WORDPRESS_TEST_DB_HOST     : WORDPRESS_TEST_DB_HOST,
-		WORDPRESS_THEME            : WORDPRESS_THEME,
-		WORDPRESS_TITLE            : WORDPRESS_TITLE,
-		WORDPRESS_VERSION          : WORDPRESS_VERSION,
-		WP_TESTS_CONFIG_FILE_PATH  : WP_TESTS_CONFIG_FILE_PATH,
-		XDEBUG_IDEKEY              : XDEBUG_IDEKEY,
-		XDEBUG_REMOTE_AUTOSTART    : XDEBUG_REMOTE_AUTOSTART,
-		XDEBUG_REMOTE_CONNECT_BACK : XDEBUG_REMOTE_CONNECT_BACK,
-		XDEBUG_REMOTE_ENABLE       : XDEBUG_REMOTE_ENABLE,
-		XDEBUG_REMOTE_HANDLER      : XDEBUG_REMOTE_HANDLER,
-		XDEBUG_REMOTE_HOST         : XDEBUG_REMOTE_HOST,
-		XDEBUG_REMOTE_PORT         : XDEBUG_REMOTE_PORT
+		APP_ENV                         : APP_ENV,
+		COMPOSER_CACHE_DIR              : COMPOSER_CACHE_DIR,
+		COMPOSER_HOME                   : COMPOSER_HOME,
+		COMPOSER_VENDOR_DIR             : COMPOSER_VENDOR_DIR,
+		MARIADB_HOST                    : MARIADB_HOST,
+		MARIADB_PORT_NUMBER             : MARIADB_PORT_NUMBER,
+		COMPOSER_VERSION                : COMPOSER_VERSION,
+		DB_VERSION                      : DB_VERSION,
+		DIFF_FILE                       : DIFF_FILE,
+		DIFF_FILE_CSS                   : DIFF_FILE_CSS,
+		DIFF_FILE_JS                    : DIFF_FILE_JS,
+		DIFF_FILE_PHP                   : DIFF_FILE_PHP,
+		DIFF_FILE_SCSS                  : DIFF_FILE_SCSS,
+		JETPACK_DEV_DEBUG               : JETPACK_DEV_DEBUG,
+		MEMCACHED_VERSION               : MEMCACHED_VERSION,
+		MULTISITE                       : MULTISITE,
+		MYSQL_DATABASE                  : MYSQL_DATABASE,
+		MYSQL_PASSWORD                  : MYSQL_PASSWORD,
+		MYSQL_ROOT_PASSWORD             : MYSQL_ROOT_PASSWORD,
+		MYSQL_USER                      : MYSQL_USER,
+		MYSQL_VOLUMES                   : MYSQL_VOLUMES,
+		NGINX_VERSION                   : NGINX_VERSION,
+		NODE_VERSION                    : NODE_VERSION,
+		ORG                             : ORG,
+		ORG_URL                         : ORG_URL,
+		PHPCS_FILE                      : PHPCS_FILE,
+		PHPCS_STANDARD                  : PHPCS_STANDARD,
+		PHPUNIT_EXCLUDE_GROUPS          : PHPUNIT_EXCLUDE_GROUPS,
+		PHP_VERSION                     : PHP_VERSION,
+		TEXT_DOMAIN                     : TEXT_DOMAIN,
+		WEB_ROOT                        : WEB_ROOT,
+		WORDPRESS_ADMIN_PASSWORD        : WORDPRESS_ADMIN_PASSWORD,
+		WORDPRESS_ADMIN_USER            : WORDPRESS_ADMIN_USER,
+		WORDPRESS_CACHE                 : WORDPRESS_CACHE,
+		WORDPRESS_DB_HOST               : WORDPRESS_DB_HOST,
+		WORDPRESS_COMPOSER_PACKAGE_TYPE : WORDPRESS_COMPOSER_PACKAGE_TYPE,
+		WORDPRESS_DB_NAME               : WORDPRESS_DB_NAME,
+		WORDPRESS_DB_PASSWORD           : WORDPRESS_DB_PASSWORD,
+		WORDPRESS_DB_USER               : WORDPRESS_DB_USER,
+		WORDPRESS_DOMAIN                : WORDPRESS_DOMAIN,
+		WORDPRESS_EMAIL                 : WORDPRESS_EMAIL,
+		WORDPRESS_PARENT_THEME          : WORDPRESS_PARENT_THEME,
+		WORDPRESS_TABLE_PREFIX          : WORDPRESS_TABLE_PREFIX,
+		WORDPRESS_TEST_DB_HOST          : WORDPRESS_TEST_DB_HOST,
+		WORDPRESS_THEME                 : WORDPRESS_THEME,
+		WORDPRESS_TITLE                 : WORDPRESS_TITLE,
+		WORDPRESS_VERSION               : WORDPRESS_VERSION,
+		WP_TESTS_CONFIG_FILE_PATH       : WP_TESTS_CONFIG_FILE_PATH,
+		XDEBUG_IDEKEY                   : XDEBUG_IDEKEY,
+		XDEBUG_REMOTE_AUTOSTART         : XDEBUG_REMOTE_AUTOSTART,
+		XDEBUG_REMOTE_CONNECT_BACK      : XDEBUG_REMOTE_CONNECT_BACK,
+		XDEBUG_REMOTE_ENABLE            : XDEBUG_REMOTE_ENABLE,
+		XDEBUG_REMOTE_HANDLER           : XDEBUG_REMOTE_HANDLER,
+		XDEBUG_REMOTE_HOST              : XDEBUG_REMOTE_HOST,
+		XDEBUG_REMOTE_PORT              : XDEBUG_REMOTE_PORT
 	};
 }
 
