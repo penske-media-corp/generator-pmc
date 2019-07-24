@@ -34,5 +34,3 @@ tests_add_filter( 'after_setup_theme', function () {
 
 // Include core's bootstrap.
 require $_tests_dir . '/includes/bootstrap.php';
-
-//EOF

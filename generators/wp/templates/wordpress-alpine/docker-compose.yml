@@ -14,7 +14,8 @@ services:
         WORDPRESS_VERSION: <%= "$WORDPRESS_VERSION" %>
     depends_on:
       - db
-    env_file: .env networks:
+    env_file: .env
+    networks:
       - back
       - front
     restart: always
@@ -24,8 +25,7 @@ services:
       - <%= "$COMPOSER_VENDOR_DIR/pmc/mu-plugins:$WEB_ROOT/wp-content/mu-plugins:rw" %>
       - <%= "$COMPOSER_VENDOR_DIR/pmc/plugins:$WEB_ROOT/wp-content/plugins:rw" %>
       - <%= "$COMPOSER_VENDOR_DIR/pmc/themes/$WORDPRESS_PARENT_THEME:$WEB_ROOT/wp-content/themes/$WORDPRESS_PARENT_THEME:rw" %>
-    working_dir: <%= "$WEB_ROOT" %>
-
+    working_dir: <%= "$WEB_ROOT" %> 
   server:
     build:
       context: https://github.com/penske-media-corp/alpine-wordpress.git

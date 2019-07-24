@@ -1,9 +1,9 @@
 {
-	"author": "PMC",
-	"description": "Rolling Stone 2018",
-	"homepage": "https://bitbucket.org/penskemediacorp/pmc-rollingstone-2018#readme",
+	"author": "<%= $ORG %>",
+	"description": "",
+	"homepage": "<%= $ORG_URL %>",
 	"license": "ISC",
-	"name": "pmc-rollingstone-2018",
+	"name": "<%= $WORDPRESS_THEME %>",
 	"version": "1.0.0",
 	"devDependencies": {
 		"eslint": "^5.16.0",

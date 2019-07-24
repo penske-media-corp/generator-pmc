@@ -20,10 +20,10 @@
 			"type": "git",
 			"url": "https://bitbucket.org/penskemediacorp/pmc-plugins.git"
 		},
-		"pmc/pmc-core-v2": {
+		<% if(WORDPRESS_PARENT_THEME) { %>"pmc/pmc-core-v2": {
 			"type": "git",
 			"url": "https://bitbucket.org/penskemediacorp/pmc-core-v2.git"
-		},
+		},<% } %>
 		"pmc/vip-go-mu-plugins-built": {
 			"type": "package",
 			"package": {
@@ -48,7 +48,7 @@
 	},
 	"require": {
 		"composer/installers": "^1.6",
-		"pmc/pmc-core-v2": "dev-master",
+		<% if(WORDPRESS_PARENT_THEME) { %> "pmc/<%= WORDPRESS_PARENT_THEME %>": "dev-master", <% } %>
 		"pmc/pmc-vip-go-plugins": "dev-master",
 		"pmc/vip-go-mu-plugins-built": "dev-master",
 		"pmc/pmc-plugins": "dev-master"

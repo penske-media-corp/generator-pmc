@@ -1,11 +1,10 @@
 <%= WORDPRESS_THEME %>
 ########################################
 
-WordPress theme for `<%= WORDPRESS_THEME %> <<%= ORG_URL %>>
+WordPress theme for `<%= WORDPRESS_THEME %> <%= ORG_URL %>`
 
 APP Details
 =============
-
 <% if(WORDPRESS_PARENT_THEME) { %>* Parent theme <%= WORDPRESS_PARENT_THEME %><% } %>
 
 Installation
@@ -17,33 +16,33 @@ Installation
 Dev
 -----
 Start up the app first by building the docker image:
-
-.. code-block:: sh
-    docker-compose up --build -d --force-recreate --remove-orphans
+```sh
+docker-compose up --build -d --force-recreate --remove-orphans
+```
 
 Build the dependencies:
-
-.. code-block:: sh
-    docker-compose run --rm build-npm
-    docker-compose run --rm build-php
+```sh
+docker-compose run --rm build-npm
+docker-compose run --rm build-php
+```
 
 Install WordPress:
-
-.. code-block:: sh
-
-    docker-compose run --rm wp-cli
+```sh
+docker-compose run --rm wp-cli
+```
 
 Run tests:
-
-.. code-block:: sh
-    docker-compose run --rm test-npm
-    docker-compose run --rm test-npm /bin/sh
-    docker-compose run --rm test-php
-    docker-compose run --rm test-php /bin/sh
+```sh
+docker-compose run --rm test-npm
+docker-compose run --rm test-npm /bin/sh
+docker-compose run --rm test-php
+docker-compose run --rm test-php /bin/sh
+```
 
 Run CI:
-.. code-block:: sh
+```sh
     wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/_ss-wordpress/master/global/_ss-ci.sh | sh
+```
 
 Critical files for CI/CD
 =============
