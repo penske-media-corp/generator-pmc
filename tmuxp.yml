@@ -2,7 +2,7 @@ session_name: generator-pmc
 start_directory: ./
 
 windows:
-  - window_name: editor
+  - window_name: generator-pmc
     start_directory: ./
     focus: True
     layout: main-vertical

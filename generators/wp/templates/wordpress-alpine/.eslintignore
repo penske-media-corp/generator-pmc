@@ -1,0 +1,4 @@
+**/*.min.js
+**/.cache
+**/node_modules
+**/vendor

@@ -1,0 +1,23 @@
+{
+	"textdomain":"<%= WORDPRESS_THEME %>",
+	"basedir":"./",
+	"config":"wordpress",
+	"ignores-rules": {
+		"all-lowercase": true
+	},
+	"ignored-functions": {
+		"load_pmc_plugins":true
+	},
+	"ignored-strings": [
+		"/*%",
+		"<!%"
+	],
+	"ignored-atts": [
+		"class"
+	],
+	"ignored-paths": [
+		"./node_modules",
+		"./tests/",
+		"./vendor/"
+	]
+}

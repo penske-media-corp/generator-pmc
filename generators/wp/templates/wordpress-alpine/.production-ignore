@@ -1,0 +1,4 @@
+# Here you can put any files you don't want to sync to production
+# Think of it like a .gitignore for for production
+**/.*
+**/*.json

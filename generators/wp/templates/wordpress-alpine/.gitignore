@@ -1,0 +1,6 @@
+*.log
+*.map
+*.sql
+.*
+node_modules
+vendor
