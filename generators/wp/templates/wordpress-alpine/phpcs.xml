@@ -4,7 +4,7 @@
 	<exclude-pattern>.*</exclude-pattern>
 	<exclude-pattern>assets</exclude-pattern>
 	<exclude-pattern>tests</exclude-pattern>
-	<rule ref="PmcWpVip">
+	<rule ref="<%= PHPCS_STANDARD %>">
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
 	</rule>
 </ruleset>

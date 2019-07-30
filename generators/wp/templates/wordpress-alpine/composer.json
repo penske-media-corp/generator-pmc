@@ -5,8 +5,8 @@
 	"license": "proprietary",
 	"authors": [
 	{
-		"name": "PMC",
-		"homepage": "https://pmc.com"
+		"name": "<%= ORG %>",
+		"homepage": "<%= ORG_URL %>"
 	}
 	],
 	"scripts": {

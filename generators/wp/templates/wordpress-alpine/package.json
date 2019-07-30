@@ -1,9 +1,9 @@
 {
-	"author": "<%= $ORG %>",
-	"description": "",
-	"homepage": "<%= $ORG_URL %>",
+	"author": "<%= ORG %>",
+	"description": "A <%= ORG %> project",
+	"homepage": "<%= ORG_URL %>",
 	"license": "ISC",
-	"name": "<%= $WORDPRESS_THEME %>",
+	"name": "<%= WORDPRESS_THEME %>",
 	"version": "1.0.0",
 	"devDependencies": {
 		"eslint": "^5.16.0",
