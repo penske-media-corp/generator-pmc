@@ -16,8 +16,10 @@
 		"class"
 	],
 	"ignored-paths": [
-		"./node_modules",
-		"./tests/",
-		"./vendor/"
+		"/.cache/",
+		"/node_modules",
+		"/template-parts",
+		"/tests/",
+		"/vendor/"
 	]
 }
