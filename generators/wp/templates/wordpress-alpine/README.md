@@ -41,7 +41,7 @@ docker-compose run --rm test-php /bin/sh
 
 Run CI:
 ```sh
-    wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/_ss-wordpress/master/global/_ss-ci.sh | sh
+    wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/global/_ss-ci.sh | sh
 ```
 
 Critical files for CI/CD
