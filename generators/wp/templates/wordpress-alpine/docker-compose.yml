@@ -39,9 +39,8 @@ services:
     depends_on:
       - wp
     labels:
-      - 'traefik.enable=true'
-      - "traefik.frontend.rule=Host:<%= $WORDPRESS_DOMAINi %;"
-      - "traefik.frontend.rule=Host:$WORDPRESS_DOMAIN"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:<%= "$WORDPRESS_DOMAIN" %>;"
     links:
       - wp
     networks:

@@ -9,8 +9,11 @@ generator-pmc
 - `npm i -g generator-pmc`
 - `cd {some-project}`
 - `yo pmc:{sub-command}`
-- follow the cli instructions using your own discretion with the updates
+- follow the cli instructions using your own discretion with the updates to your application
 
+##@TODOS:
+- Integrate master `bootstrap.php` into wordpress-alpine
+- Refactor [wordpress-alpine](generators/wp/index.js) to not use quite so many arrays to pass args
 
 ## ISSUES
 If any issues are encountered open an issue, file a ticket, or submit a PR!
