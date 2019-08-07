@@ -1,4 +1,12 @@
 <?php
+require_once getenv('PMC_PHPUNIT_BOOTSTRAP');
+ 
+tests_add_filter('after_setup_theme', function () {
+    \PMC\Unit_Test\Autoloader::register( 'PMC\My_Plugin\Tests', __DIR__ );
+});
+ 
+PMC\Unit_Test\Bootstrap::get_instance()->start();
+// EOF<?php
 define( 'IS_UNIT_TESTING', true );
 
 // Load Core's test suite.
