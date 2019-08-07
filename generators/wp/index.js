@@ -36,6 +36,7 @@ var NGINX_VERSION                   = '1.16';
 var NODE_VERSION                    = '10.13.0';
 var ORG                             = 'penskemediacorp';
 var ORG_URL                         = 'https://pmc.com/contact';
+var PARATEST                        = true;
 var PHPCS_FILE                      = '/tmp/phpcs.json';
 var PHPCS_STANDARD                  = 'PmcWpVip';
 var PHPUNIT_EXCLUDE_GROUPS          = 'pmc-phpunit-ignore-failed';
@@ -105,7 +106,7 @@ function showPrompts() {
 			type: 'confirm',
 			name: 'MULTISITE',
 			message: 'WordPress Multisite?',
-			default: false
+			default: MULTISITE
 		}, {
 			type: 'input',
 			name: 'NGINX_VERSION',
@@ -205,6 +206,11 @@ function showPrompts() {
 			message: 'WordPress test db host',
 			default: WORDPRESS_TEST_DB_HOST
 		}, {
+			type: 'confirm',
+			name: 'PARATEST',
+			message: 'Use paratest? ( no guarantees on out of the box support )',
+			default: PARATEST
+		}, {
 			type: 'input',
 			name: 'WORDPRESS_THEME',
 			message: 'Default WordPress theme',
@@ -245,6 +251,7 @@ function showPrompts() {
 		NODE_VERSION                    = props.NODE_VERSION;
 		ORG                             = props.ORG;
 		ORG_URL                         = props.ORG_URL;
+		PARATEST                        = props.PARATEST;
 		PHPCS_STANDARD                  = props.PHPCS_STANDARD;
 		PHPCS_FILE                      = PHPCS_FILE;
 		MARIADB_HOST                    = MARIADB_HOST;
@@ -308,6 +315,7 @@ function getDefaultTemplateData() {
 		NODE_VERSION                    : NODE_VERSION,
 		ORG                             : ORG,
 		ORG_URL                         : ORG_URL,
+		PARATEST                        : PARATEST,
 		PHPCS_FILE                      : PHPCS_FILE,
 		PHPCS_STANDARD                  : PHPCS_STANDARD,
 		PHPUNIT_EXCLUDE_GROUPS          : PHPUNIT_EXCLUDE_GROUPS,
