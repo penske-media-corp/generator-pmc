@@ -28,7 +28,7 @@ docker-compose run --rm build-php
 
 Install WordPress:
 ```sh
-docker-compose run --rm wp-cli
+docker-compose run --rm cli
 ```
 
 Run tests:
