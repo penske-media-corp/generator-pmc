@@ -6,10 +6,14 @@ generator-pmc
 - clone this repo
 - `cd generator-pmc`
 - `npm link`
-- `npm i -g generator-pmc`
+- `npm i -g yo`
 - `cd {some-project}`
 - `yo pmc:{sub-command}`
 - follow the cli instructions using your own discretion with the updates to your application
+
+## AVAILABLE SUBCOMMANDS
+
+- `yo pmc:wp` Setup local environment for a standard WordPress theme.
 
 ##@TODOS:
 - Integrate master `bootstrap.php` into wordpress-alpine
