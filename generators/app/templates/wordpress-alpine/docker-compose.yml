@@ -1,0 +1,194 @@
+version: "3.7"
+
+services:
+
+  wp:
+    build:
+      context: https://github.com/penske-media-corp/alpine-wordpress.git
+      target: wp
+      args:
+        NGINX_VERSION: <%= "$NGINX_VERSION" %>
+        NODE_VERSION: <%= "$NODE_VERSION" %>
+        PHP_VERSION: <%= "$PHP_VERSION" %>
+        WEB_ROOT: <%= "$WEB_ROOT" %>
+        WORDPRESS_VERSION: <%= "$WORDPRESS_VERSION" %>
+    depends_on:
+      - db
+    env_file: .env
+    networks:
+      - back
+      - front
+    restart: always
+    volumes:
+      - <%= "$WORDPRESS_CACHE:$WEB_ROOT:rw" %>
+      - <%= "$PWD:$WEB_ROOT/wp-content/themes/$WORDPRESS_THEME:rw" %>
+      - <%= "$COMPOSER_VENDOR_DIR/pmc/mu-plugins:$WEB_ROOT/wp-content/mu-plugins:rw" %>
+      - <%= "$COMPOSER_VENDOR_DIR/pmc/plugins:$WEB_ROOT/wp-content/plugins:rw" %>
+      - <%= "$COMPOSER_VENDOR_DIR/pmc/themes/$WORDPRESS_PARENT_THEME:$WEB_ROOT/wp-content/themes/$WORDPRESS_PARENT_THEME:rw" %>
+    working_dir: <%= "$WEB_ROOT" %>
+  server:
+    build:
+      context: https://github.com/penske-media-corp/alpine-wordpress.git
+      target: server
+      args:
+        NGINX_VERSION: <%= "$NGINX_VERSION" %>
+        NODE_VERSION: <%= "$NODE_VERSION" %>
+        PHP_VERSION: <%= "$PHP_VERSION" %>
+        WEB_ROOT: <%= "$WEB_ROOT" %>
+        WORDPRESS_VERSION: <%= "$WORDPRESS_VERSION" %>
+    depends_on:
+      - wp
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:<%= "$WORDPRESS_DOMAIN" %>;"
+    links:
+      - wp
+    networks:
+      - back
+      - front
+      - pmc-dev_default
+    ports:
+      - 80
+      - 443
+    restart: always
+    volumes:
+      - "$WORDPRESS_CACHE:$WEB_ROOT:rw"
+
+  cli:
+    build:
+      context: https://github.com/penske-media-corp/alpine-wordpress.git
+      target: cli
+      args:
+        NGINX_VERSION: <%= "$NGINX_VERSION" %>
+        NODE_VERSION: <%= "$NODE_VERSION" %>
+        PHP_VERSION: <%= "$PHP_VERSION" %>
+        WEB_ROOT: <%= "$WEB_ROOT" %>
+        WORDPRESS_VERSION: <%= "$WORDPRESS_VERSION" %>
+    command: >
+      sh -c "wget -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/wp-cli/_ss-install-wp.sh | sh"
+    env_file: .env
+    networks:
+      - back
+    volumes:
+      - "$WORDPRESS_CACHE:$WEB_ROOT:rw"
+      - "./:$WEB_ROOT/wp-content/themes/$WORDPRESS_THEME:rw"
+      - "$COMPOSER_VENDOR_DIR/pmc/mu-plugins:$WEB_ROOT/wp-content/mu-plugins:rw"
+      - "$COMPOSER_VENDOR_DIR/pmc/plugins:$WEB_ROOT/wp-content/plugins:rw"
+      - "$COMPOSER_VENDOR_DIR/pmc/themes/$WORDPRESS_PARENT_THEME:$WEB_ROOT/wp-content/themes/$WORDPRESS_PARENT_THEME:rw"
+    working_dir: "$WEB_ROOT/wp-content/themes/$WORDPRESS_THEME"
+
+  db:
+    env_file: .env
+    image: "mariadb:$DB_VERSION"
+    networks:
+      - back
+    restart: always
+    volumes:
+      - "$MYSQL_VOLUMES/db:/var/lib/mysql"
+
+  cache:
+    image: "memcached:$MEMCACHED_VERSION-alpine"
+    networks:
+      - back
+
+  build-npm:
+    build:
+      context: https://github.com/penske-media-corp/alpine-wordpress.git
+      target: build-npm
+      args:
+        NGINX_VERSION: <%= "$NGINX_VERSION" %>
+        NODE_VERSION: <%= "$NODE_VERSION" %>
+        PHP_VERSION: <%= "$PHP_VERSION" %>
+        WEB_ROOT: <%= "$WEB_ROOT" %>
+        WORDPRESS_VERSION: <%= "$WORDPRESS_VERSION" %>
+    command: >
+      sh -c "yarn install --non-interactive --verbose"
+    restart: on-failure
+    volumes:
+      - "./:$WEB_ROOT"
+    working_dir: "$WEB_ROOT"
+
+  build-php:
+    command: >
+      sh -c "composer install -vvv"
+    env_file: .env
+    environment:
+      - <%- "COMPOSER_AUTH=$COMPOSER_AUTH" %>
+    image: "composer:$COMPOSER_VERSION"
+    restart: on-failure
+    volumes:
+      - "./:$WEB_ROOT"
+      - "./.cache/composer:$COMPOSER_CACHE_DIR"
+      - "./.cache/config/composer:$COMPOSER_HOME"
+    working_dir: "$WEB_ROOT"
+
+  test-npm:
+    build:
+      context: https://github.com/penske-media-corp/alpine-wordpress.git
+      target: test-npm
+      args:
+        NGINX_VERSION: <%= "$NGINX_VERSION" %>
+        NODE_VERSION: <%= "$NODE_VERSION" %>
+        PHP_VERSION: <%= "$PHP_VERSION" %>
+        WEB_ROOT: <%= "$WEB_ROOT" %>
+        WORDPRESS_VERSION: <%= "$WORDPRESS_VERSION" %>
+    command: >
+      sh -c "wget -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/npm/_ss-run-npm-ci.sh | sh"
+    env_file: .env
+    restart: on-failure
+    volumes:
+      - "./:$WEB_ROOT"
+    working_dir: "$WEB_ROOT"
+
+  test-php:
+    build:
+      context: https://github.com/penske-media-corp/alpine-wordpress.git
+      target: test-php
+      args:
+        NGINX_VERSION: <%= "$NGINX_VERSION" %>
+        NODE_VERSION: <%= "$NODE_VERSION" %>
+        PHP_VERSION: <%= "$PHP_VERSION" %>
+        WEB_ROOT: <%= "$WEB_ROOT" %>
+        WORDPRESS_VERSION: <%= "$WORDPRESS_VERSION" %>
+    # Defines where WP is installed
+    command: >
+      sh -c "wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/global/_ss-setup-diff.sh | sh \
+             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-run-phplint.sh | sh \
+             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-run-phpcs.sh | sh \
+             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-setup-xdebug.sh | sh \
+             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-setup-phpunit.sh | sh \
+             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-run-<% if(PARATEST) { %>paratest.sh <% } else { %>phpunit.sh<% } %> | sh \
+             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-run-codecov.sh | sh"
+    depends_on:
+      - test-db
+    environment:
+      - <%- "COMPOSER_AUTH=$COMPOSER_AUTH" %>
+    env_file: .env
+    environment:
+      - <%- "CODECOV_AUTH_TOKEN=$CODECOV_AUTH_TOKEN" %>
+    networks:
+      - test-back
+    restart: on-failure
+    volumes:
+      - "$WORDPRESS_CACHE:$WEB_ROOT:rw"
+      - "./:$WEB_ROOT/wp-content/themes/$WORDPRESS_THEME:rw"
+      - "$COMPOSER_VENDOR_DIR/pmc/mu-plugins:$WEB_ROOT/wp-content/mu-plugins:rw"
+      - "$COMPOSER_VENDOR_DIR/pmc/plugins:$WEB_ROOT/wp-content/plugins:rw"
+      - "$COMPOSER_VENDOR_DIR/pmc/themes/$WORDPRESS_PARENT_THEME:$WEB_ROOT/wp-content/themes/$WORDPRESS_PARENT_THEME:rw"
+    working_dir: "$WEB_ROOT/wp-content/themes/$WORDPRESS_THEME"
+
+  test-db:
+    image: mariadb:<%= "$DB_VERSION" %>
+    env_file: .env
+    networks:
+      - test-back
+    restart: always
+    volumes:
+      - <%- "$MYSQL_VOLUMES/test-db:/var/lib/mysql" %>
+
+networks:
+  back:
+  front:
+  pmc-dev_default:
+    external: true
+  test-back:

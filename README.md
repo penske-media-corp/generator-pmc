@@ -18,6 +18,7 @@ generator-pmc
 ##@TODOS:
 - Integrate master `bootstrap.php` into wordpress-alpine
 - Refactor [wordpress-alpine](generators/wp/index.js) to not use quite so many arrays to pass args
+- Add options when running `yo` so that users can choose what to generate without a sub-command.
 
 ## ISSUES
 If any issues are encountered open an issue, file a ticket, or submit a PR!
