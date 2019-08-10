@@ -11,8 +11,10 @@
 	],
 	"scripts": {
 		"post-install-cmd": [
-			"ln -svfr ./vendor/pmc/mu-plugins/vip-go-mu-plugins-built/* ./vendor/pmc/mu-plugins/",
-			"ln -svfr ./vendor/pmc/plugins/pmc-vip-go-plugins/* ./vendor/pmc/plugins/"
+			<% if(WORDPRESS_FLAVOR === 'vipgo') { %>"ln -svfr ./vendor/pmc/mu-plugins/vip-go-mu-plugins-built/* ./vendor/pmc/mu-plugins/",
+			"ln -svfr ./vendor/pmc/plugins/pmc-vip-go-plugins/* ./vendor/pmc/plugins/"<% } %>
+			<% if(WORDPRESS_FLAVOR === 'wpcom') { %>"ln -svfr ./vendor/pmc/mu-plugins/vip-wpcom-mu-plugins/* ./vendor/pmc/mu-plugins/",
+			"ln -svfr ./vendor/pmc/mu-plugins/wordpress-vip-plugins/* ./vendor/pmc/plugins/"<% } %>
 		]
 	},
 	"repositories": {
@@ -20,11 +22,11 @@
 			"type": "git",
 			"url": "https://bitbucket.org/penskemediacorp/pmc-plugins.git"
 		},
-		<% if(WORDPRESS_PARENT_THEME) { %>"pmc/pmc-core-v2": {
+		<% if(WORDPRESS_PARENT_THEME) { %>"pmc/<%= WORDPRESS_PARENT_THEME %>": {
 			"type": "git",
-			"url": "https://bitbucket.org/penskemediacorp/pmc-core-v2.git"
+			"url": "https://bitbucket.org/penskemediacorp/<%= WORDPRESS_PARENT_THEME %>.git"
 		},<% } %>
-		"pmc/vip-go-mu-plugins-built": {
+		<% if(WORDPRESS_FLAVOR === 'vipgo') { %>"pmc/vip-go-mu-plugins-built": {
 			"type": "package",
 			"package": {
 				"name": "pmc/vip-go-mu-plugins-built",
@@ -40,7 +42,24 @@
 		"pmc/pmc-vip-go-plugins": {
 			"type": "git",
 			"url": "https://bitbucket.org/penskemediacorp/pmc-vip-go-plugins.git"
+		},<% } %>
+		<% if(WORDPRESS_FLAVOR === 'wpcom') { %>"pmc/vip-wpcom-mu-plugins": {
+			"type": "package",
+			"package": {
+				"name": "pmc/vip-wpcom-mu-plugins",
+				"version": "dev-master",
+				"type": "wordpress-muplugin",
+				"source": {
+					"url": "https://github.com/automattic/vip-wpcom-mu-plugins.git",
+					"type": "git",
+					"reference":"master"
+				}
+			}
 		},
+		"pmc/wordpress-vip-plugins": {
+			"type": "git",
+			"url": "https://bitbucket.org/penskemediacorp/wordpress/vip-plugins.git"
+		}, <% } %>
 		"pmc/pmc-codesniffer": {
 			"type": "git",
 			"url": "https://bitbucket.org/penskemediacorp/pmc-codesniffer.git"
@@ -48,9 +67,12 @@
 	},
 	"require": {
 		"composer/installers": "^1.6",
-		<% if(WORDPRESS_PARENT_THEME) { %> "pmc/<%= WORDPRESS_PARENT_THEME %>": "dev-master", <% } %>
+		<% if(WORDPRESS_PARENT_THEME) { %> "pmc/<%= WORDPRESS_PARENT_THEME %>": "dev-master",<% } %>
+		<% if(WORDPRESS_FLAVOR === 'vipgo') { %>"pmc/vip-go-mu-plugins-built": {
 		"pmc/pmc-vip-go-plugins": "dev-master",
-		"pmc/vip-go-mu-plugins-built": "dev-master",
+		"pmc/vip-go-mu-plugins-built": "dev-master",<% } %>
+		<% if(WORDPRESS_FLAVOR === 'wpcom') { %>"pmc/wordpress-vip-plugins": "dev-master",
+		"pmc/vip-wpcom-mu-plugins": "dev-master",<% } %>
 		"pmc/pmc-plugins": "dev-master"
 	},
 	"extra": {
