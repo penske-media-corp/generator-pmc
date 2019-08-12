@@ -41,6 +41,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:<%= "$WORDPRESS_DOMAIN" %>;"
+      - "traefik.docker.network=pmc-dev_default"
     links:
       - wp
     networks:
@@ -82,7 +83,7 @@ services:
     image: "mariadb:$DB_VERSION"
     networks:
       - back
-    restart: on-failure
+    restart: always
     volumes:
       - "$MYSQL_VOLUMES/db:/var/lib/mysql"
 
@@ -103,7 +104,7 @@ services:
         WORDPRESS_VERSION: <%= "$WORDPRESS_VERSION" %>
     command: >
       sh -c "yarn install --non-interactive --verbose"
-    restart: on-failure
+    restart: always
     volumes:
       - "./:$WEB_ROOT"
     working_dir: "$WEB_ROOT"
