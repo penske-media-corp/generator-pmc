@@ -53,6 +53,7 @@ var WORDPRESS_DB_PASSWORD           = 'wp';
 var WORDPRESS_DB_USER               = 'wp';
 var WORDPRESS_DOMAIN                = process.cwd().split(path.sep).pop().toLowerCase() + '.pmcdev.local';
 var WORDPRESS_EMAIL                 = 'dist.dev@pmc.com';
+var WORDPRESS_FLAVOR                = 'vipgo';
 var WORDPRESS_PARENT_THEME          = 'pmc-core-v2';
 var WORDPRESS_TABLE_PREFIX          = 'wp_';
 var WORDPRESS_TEST_DB_HOST          = 'test-db';
@@ -71,15 +72,15 @@ var XDEBUG_REMOTE_PORT              = '9000';
 function showPrompts() {
 	var done = this.async();
 	var prompts = [{
-		type: 'input',
-		name: 'APP_ENV',
-		message: 'Default WordPress dev environment?',
-		default: APP_ENV
+			type: 'input',
+			name: 'APP_ENV',
+			message: 'Default WordPress dev environment?',
+			default: APP_ENV
 		}, {
-		type: 'list',
-		name: 'WORDPRESS_COMPOSER_PACKAGE_TYPE',
-		message: 'WordPress composer package type?',
-		choices: [{
+			type: 'list',
+			name: 'WORDPRESS_COMPOSER_PACKAGE_TYPE',
+			message: 'WordPress composer package type?',
+			choices: [{
 				name: 'Dropin',
 				value: 'dropin'
 			}, {
@@ -92,6 +93,20 @@ function showPrompts() {
 				name: 'Theme',
 				value: 'wordpress-theme'
 			}]
+		}, {
+			type: 'list',
+			name: 'WORDPRESS_FLAVOR',
+			message: 'WordPress Flavor',
+			when: function (answers) {
+				return answers.WORDPRESS_COMPOSER_PACKAGE_TYPE === 'wordpress-theme';
+			},
+			choices: [{
+					name: 'WPCom',
+					value: 'wpcom'
+				}, {
+					name: 'VIPGO',
+					value: 'vipgo'
+				}]
 		}, {
 			type: 'input',
 			name: 'COMPOSER_VERSION',
@@ -239,44 +254,45 @@ function showPrompts() {
 		DIFF_FILE_JS                    = DIFF_FILE_JS;
 		DIFF_FILE_PHP                   = DIFF_FILE_PHP;
 		DIFF_FILE_SCSS                  = DIFF_FILE_SCSS;
+		JETPACK_DEV_DEBUG               = JETPACK_DEV_DEBUG;
+		MARIADB_HOST                    = MARIADB_HOST;
+		MARIADB_PORT_NUMBER             = MARIADB_PORT_NUMBER;
 		MEMCACHED_VERSION               = MEMCACHED_VERSION;
 		MULTISITE                       = props.MULTISITE;
 		MYSQL_DATABASE                  = props.MYSQL_DATABASE;
 		MYSQL_PASSWORD                  = props.MYSQL_PASSWORD;
 		MYSQL_ROOT_PASSWORD             = props.MYSQL_ROOT_PASSWORD;
 		MYSQL_USER                      = props.MYSQL_USER;
-		JETPACK_DEV_DEBUG               = JETPACK_DEV_DEBUG;
 		MYSQL_VOLUMES                   = MYSQL_VOLUMES;
 		NGINX_VERSION                   = props.NGINX_VERSION;
 		NODE_VERSION                    = props.NODE_VERSION;
 		ORG                             = props.ORG;
 		ORG_URL                         = props.ORG_URL;
 		PARATEST                        = props.PARATEST;
-		PHPCS_STANDARD                  = props.PHPCS_STANDARD;
 		PHPCS_FILE                      = PHPCS_FILE;
-		MARIADB_HOST                    = MARIADB_HOST;
-		MARIADB_PORT_NUMBER             = MARIADB_PORT_NUMBER;
+		PHPCS_STANDARD                  = props.PHPCS_STANDARD;
+		PHPUNIT_EXCLUDE_GROUPS          = PHPUNIT_EXCLUDE_GROUPS;
 		PHP_VERSION                     = props.PHP_VERSION;
 		TEXT_DOMAIN                     = props.TEXT_DOMAIN;
 		WEB_ROOT                        = props.WEB_ROOT;
 		WORDPRESS_ADMIN_PASSWORD        = props.WORDPRESS_ADMIN_PASSWORD;
 		WORDPRESS_ADMIN_USER            = props.WORDPRESS_ADMIN_USER;
 		WORDPRESS_CACHE                 = WORDPRESS_CACHE;
-		WORDPRESS_DB_HOST               = props.WORDPRESS_DB_HOST;
 		WORDPRESS_COMPOSER_PACKAGE_TYPE = props.WORDPRESS_COMPOSER_PACKAGE_TYPE;
+		WORDPRESS_DB_HOST               = props.WORDPRESS_DB_HOST;
 		WORDPRESS_DB_NAME               = props.WORDPRESS_DB_NAME;
 		WORDPRESS_DB_PASSWORD           = props.WORDPRESS_DB_PASSWORD;
 		WORDPRESS_DB_USER               = props.WORDPRESS_DB_USER;
-		PHPUNIT_EXCLUDE_GROUPS          = PHPUNIT_EXCLUDE_GROUPS;
 		WORDPRESS_DOMAIN                = props.WORDPRESS_DOMAIN;
 		WORDPRESS_EMAIL                 = props.WORDPRESS_EMAIL;
+		WORDPRESS_FLAVOR                = props.WORDPRESS_FLAVOR;
 		WORDPRESS_PARENT_THEME          = props.WORDPRESS_PARENT_THEME;
 		WORDPRESS_TABLE_PREFIX          = props.WORDPRESS_TABLE_PREFIX;
 		WORDPRESS_TEST_DB_HOST          = props.WORDPRESS_TEST_DB_HOST;
 		WORDPRESS_THEME                 = props.WORDPRESS_THEME;
 		WORDPRESS_TITLE                 = props.WORDPRESS_TITLE;
-		WP_TESTS_CONFIG_FILE_PATH       = WP_TESTS_CONFIG_FILE_PATH;
 		WORDPRESS_VERSION               = props.WORDPRESS_VERSION;
+		WP_TESTS_CONFIG_FILE_PATH       = WP_TESTS_CONFIG_FILE_PATH;
 		XDEBUG_IDEKEY                   = XDEBUG_IDEKEY;
 		XDEBUG_REMOTE_AUTOSTART         = XDEBUG_REMOTE_AUTOSTART;
 		XDEBUG_REMOTE_CONNECT_BACK      = XDEBUG_REMOTE_CONNECT_BACK;
@@ -294,8 +310,6 @@ function getDefaultTemplateData() {
 		COMPOSER_CACHE_DIR              : COMPOSER_CACHE_DIR,
 		COMPOSER_HOME                   : COMPOSER_HOME,
 		COMPOSER_VENDOR_DIR             : COMPOSER_VENDOR_DIR,
-		MARIADB_HOST                    : MARIADB_HOST,
-		MARIADB_PORT_NUMBER             : MARIADB_PORT_NUMBER,
 		COMPOSER_VERSION                : COMPOSER_VERSION,
 		DB_VERSION                      : DB_VERSION,
 		DIFF_FILE                       : DIFF_FILE,
@@ -304,6 +318,8 @@ function getDefaultTemplateData() {
 		DIFF_FILE_PHP                   : DIFF_FILE_PHP,
 		DIFF_FILE_SCSS                  : DIFF_FILE_SCSS,
 		JETPACK_DEV_DEBUG               : JETPACK_DEV_DEBUG,
+		MARIADB_HOST                    : MARIADB_HOST,
+		MARIADB_PORT_NUMBER             : MARIADB_PORT_NUMBER,
 		MEMCACHED_VERSION               : MEMCACHED_VERSION,
 		MULTISITE                       : MULTISITE,
 		MYSQL_DATABASE                  : MYSQL_DATABASE,
@@ -325,13 +341,14 @@ function getDefaultTemplateData() {
 		WORDPRESS_ADMIN_PASSWORD        : WORDPRESS_ADMIN_PASSWORD,
 		WORDPRESS_ADMIN_USER            : WORDPRESS_ADMIN_USER,
 		WORDPRESS_CACHE                 : WORDPRESS_CACHE,
-		WORDPRESS_DB_HOST               : WORDPRESS_DB_HOST,
 		WORDPRESS_COMPOSER_PACKAGE_TYPE : WORDPRESS_COMPOSER_PACKAGE_TYPE,
+		WORDPRESS_DB_HOST               : WORDPRESS_DB_HOST,
 		WORDPRESS_DB_NAME               : WORDPRESS_DB_NAME,
 		WORDPRESS_DB_PASSWORD           : WORDPRESS_DB_PASSWORD,
 		WORDPRESS_DB_USER               : WORDPRESS_DB_USER,
 		WORDPRESS_DOMAIN                : WORDPRESS_DOMAIN,
 		WORDPRESS_EMAIL                 : WORDPRESS_EMAIL,
+		WORDPRESS_FLAVOR                : WORDPRESS_FLAVOR,
 		WORDPRESS_PARENT_THEME          : WORDPRESS_PARENT_THEME,
 		WORDPRESS_TABLE_PREFIX          : WORDPRESS_TABLE_PREFIX,
 		WORDPRESS_TEST_DB_HOST          : WORDPRESS_TEST_DB_HOST,
