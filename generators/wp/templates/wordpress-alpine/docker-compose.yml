@@ -82,7 +82,7 @@ services:
     image: "mariadb:$DB_VERSION"
     networks:
       - back
-    restart: always
+    restart: on-failure
     volumes:
       - "$MYSQL_VOLUMES/db:/var/lib/mysql"
 
@@ -182,7 +182,7 @@ services:
     env_file: .env
     networks:
       - test-back
-    restart: always
+    restart: on-failure
     volumes:
       - <%- "$MYSQL_VOLUMES/test-db:/var/lib/mysql" %>
 
