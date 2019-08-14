@@ -1,12 +1,8 @@
-
 pipeline {
 	agent any
 	stages {
 		stage('RUN CI') {
 			steps {
-				script {
-					TerraformCommandToRun()
-				}
 				withCredentials([
 						string(credentialsId: 'composer-auth', variable: 'COMPOSER_AUTH')
 				]) {
