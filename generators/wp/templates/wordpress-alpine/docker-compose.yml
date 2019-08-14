@@ -107,8 +107,8 @@ services:
         WEB_ROOT: <%= "$WEB_ROOT" %>
         WORDPRESS_VERSION: <%= "$WORDPRESS_VERSION" %>
     command: >
-      sh -c "yarn install --non-interactive --verbose; exit 0"
-    restart: always
+      sh -c "wget -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/npm/_ss-build-npm.sh | sh"
+    restart: on-failure
     volumes:
       - "./:$WEB_ROOT"
     working_dir: "$WEB_ROOT"
@@ -138,7 +138,7 @@ services:
         WEB_ROOT: <%= "$WEB_ROOT" %>
         WORDPRESS_VERSION: <%= "$WORDPRESS_VERSION" %>
     command: >
-      sh -c "wget -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/npm/_ss-run-npm-ci.sh | sh"
+      sh -c "wget -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/npm/_ss-test-npm.sh | sh"
     env_file: .env
     restart: on-failure
     volumes:
@@ -157,13 +157,7 @@ services:
         WORDPRESS_VERSION: <%= "$WORDPRESS_VERSION" %>
     # Defines where WP is installed
     command: >
-      sh -c "wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/global/_ss-setup-diff.sh | sh \
-             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-run-phplint.sh | sh \
-             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-run-phpcs.sh | sh \
-             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-setup-xdebug.sh | sh \
-             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-setup-phpunit.sh | sh \
-             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-run-<% if(PARATEST) { %>paratest.sh <% } else { %>phpunit.sh<% } %> | sh \
-             && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-run-codecov.sh | sh"
+      sh -c "wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-test-php.sh | sh"
     depends_on:
       - test-db
     environment:
