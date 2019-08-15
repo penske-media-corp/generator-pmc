@@ -21,11 +21,9 @@ services:
       - front
     restart: always
     volumes:
-      - "<%= WORDPRESS_CACHE %>:<%= WEB_ROOT:rw %>"
-      - "<%= PWD %>:<%= WEB_ROOT/wp-content/themes/%<= WORDPRESS_THEME %>:rw"
-      - "<%= COMPOSER_VENDOR_DIR %>/pmc/mu-plugins %>:<%= WEB_ROOT %>/wp-content/mu-plugins:rw"
-      - "<%= COMPOSER_VENDOR_DIR %>/pmc/plugins %>:<%= WEB_ROOT %>/wp-content/plugins:rw"
-      - "<%= COMPOSER_VENDOR_DIR %>/pmc/themes/%<= WORDPRESS_PARENT_THEME %>:<%= WEB_ROOT/wp-content/themes/%<= WORDPRESS_PARENT_THEME %>:rw"
+      - "<%= WORDPRESS_CACHE %>:<%= WEB_ROOT %>:rw"
+      - "<%= WORDPRESS_CACHE %>/wp-content:<%= WEB_ROOT %>/wp-content:rw"
+      - "./:<%= WEB_ROOT/wp-content/themes/%<= WORDPRESS_THEME %>:rw"
     working_dir: "<%= WEB_ROOT %>"
 
   # nginx service only
@@ -74,10 +72,8 @@ services:
       - back
     volumes:
       - "<%= WORDPRESS_CACHE %>:<%= WEB_ROOT %>:rw"
+      - "<%= WORDPRESS_CACHE %>/wp-content:<%= WEB_ROOT %>/wp-content:rw"
       - "./:<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_THEME %>:rw"
-      - "<%= COMPOSER_VENDOR_DIR %>/pmc/mu-plugins %>:<%= WEB_ROOT %>/wp-content/mu-plugins %>:rw"
-      - "<%= COMPOSER_VENDOR_DIR %>/pmc/plugins %>:<%= WEB_ROOT %>/wp-content/plugins %>:rw"
-      - "<%= COMPOSER_VENDOR_DIR %>/pmc/themes/<%= WORDPRESS_PARENT_THEME %>:<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_PARENT_THEME %>:rw"
     working_dir: "<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_THEME %>"
 
   db:
@@ -173,11 +169,9 @@ services:
       - test-back
     restart: on-failure
     volumes:
-      - "<%= WORDPRESS_CACHE %>:<%= WEB_ROOT %>:rw "
+      - "<%= WORDPRESS_CACHE %>:<%= WEB_ROOT %>:rw"
+      - "<%= WORDPRESS_CACHE %>/wp-content:<%= WEB_ROOT %>/wp-content:rw"
       - "./:<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_THEME %>:rw"
-      - "<%= COMPOSER_VENDOR_DIR %>/pmc/mu-plugins:<%= WEB_ROOT %>/wp-content/mu-plugins:rw"
-      - "<%= COMPOSER_VENDOR_DIR %>/pmc/plugins:<%= WEB_ROOT %>/wp-content/plugins:rw"
-      - "<%= COMPOSER_VENDOR_DIR %>/pmc/themes/<%= WORDPRESS_PARENT_THEME %>:<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_PARENT_THEME %>:rw"
     working_dir: "<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_THEME %>"
 
   test-db:

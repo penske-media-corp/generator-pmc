@@ -14,7 +14,6 @@ var error          = false;
 var APP_ENV                         = 'dev';
 var COMPOSER_CACHE_DIR              = '/root/.cache/composer';
 var COMPOSER_HOME                   = '/root/.config/composer';
-var COMPOSER_VENDOR_DIR             = './vendor';
 var COMPOSER_VERSION                = '1.8.5';
 var DB_VERSION                      = '10.3';
 var DIFF_FILE                       = '/tmp/' + process.cwd().split(path.sep).pop().toLowerCase() + '.diff';
@@ -232,7 +231,6 @@ function showPrompts() {
 		APP_ENV                         = props.APP_ENV;
 		COMPOSER_CACHE_DIR              = COMPOSER_CACHE_DIR;
 		COMPOSER_HOME                   = COMPOSER_HOME;
-		COMPOSER_VENDOR_DIR             = COMPOSER_VENDOR_DIR;
 		COMPOSER_VERSION                = COMPOSER_VERSION;
 		DB_VERSION                      = props.DB_VERSION;
 		DIFF_FILE                       = DIFF_FILE;
@@ -294,7 +292,6 @@ function getDefaultTemplateData() {
 		APP_ENV                         : APP_ENV,
 		COMPOSER_CACHE_DIR              : COMPOSER_CACHE_DIR,
 		COMPOSER_HOME                   : COMPOSER_HOME,
-		COMPOSER_VENDOR_DIR             : COMPOSER_VENDOR_DIR,
 		MARIADB_HOST                    : MARIADB_HOST,
 		MARIADB_PORT_NUMBER             : MARIADB_PORT_NUMBER,
 		COMPOSER_VERSION                : COMPOSER_VERSION,
