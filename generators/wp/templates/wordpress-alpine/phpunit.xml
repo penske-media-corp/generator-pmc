@@ -13,9 +13,11 @@
 	</testsuites>
 	<filter>
 		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory prefix="class-" suffix=".php">./inc</directory>
+			<directory suffix=".php">.</directory>
 			<exclude>
-				<directory suffix=".php">./tests</directory>
+				<directory>./tests</directory>
+				<directory>./template-parts</directory>
+				<!--// Any other standard folder we want to excludes? //-->
 			</exclude>
 		</whitelist>
 	</filter>

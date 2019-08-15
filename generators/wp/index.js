@@ -41,6 +41,7 @@ var PHPCS_FILE                      = '/tmp/phpcs.json';
 var PHPCS_STANDARD                  = 'PmcWpVip';
 var PHPUNIT_EXCLUDE_GROUPS          = 'pmc-phpunit-ignore-failed';
 var PHP_VERSION                     = '7.3';
+var PMC_PHPUNIT_BOOTSTRAP           = "/var/www/html/wp-content/plugins/pmc-plugins/pmc-unit-test/bootstrap.php"
 var TEXT_DOMAIN                     = process.cwd().split(path.sep).pop().toLowerCase();
 var WEB_ROOT                        = '/var/www/html';
 var WORDPRESS_ADMIN_PASSWORD        = 'wp';
@@ -57,9 +58,9 @@ var WORDPRESS_PARENT_THEME          = 'pmc-core-v2';
 var WORDPRESS_TABLE_PREFIX          = 'wp_';
 var WORDPRESS_TEST_DB_HOST          = 'test-db';
 var WORDPRESS_THEME                 = process.cwd().split(path.sep).pop().toLowerCase();
+var WORDPRESS_THEME_NAMESPACE       = process.cwd().split(path.sep).pop().replace('pmc-', '').replace(/\-\d+/g,'').toLowerCase().replace(/(?<=\-)[^\-]|^./g, a=>a.toUpperCase()).replace('-','_');
 var WORDPRESS_TITLE                 = process.cwd().split(path.sep).pop().toLowerCase();
 var WORDPRESS_VERSION               = '5.2';
-var WP_TESTS_CONFIG_FILE_PATH       = '/var/www/html/wp-tests/tests/phpunit';
 var XDEBUG_IDEKEY                   = process.cwd().split(path.sep).pop().toLowerCase();
 var XDEBUG_REMOTE_AUTOSTART         = '1';
 var XDEBUG_REMOTE_CONNECT_BACK      = '0';
@@ -268,6 +269,7 @@ function showPrompts() {
 		WORDPRESS_DB_PASSWORD           = props.WORDPRESS_DB_PASSWORD;
 		WORDPRESS_DB_USER               = props.WORDPRESS_DB_USER;
 		PHPUNIT_EXCLUDE_GROUPS          = PHPUNIT_EXCLUDE_GROUPS;
+		PMC_PHPUNIT_BOOTSTRAP           = PMC_PHPUNIT_BOOTSTRAP;
 		WORDPRESS_DOMAIN                = props.WORDPRESS_DOMAIN;
 		WORDPRESS_EMAIL                 = props.WORDPRESS_EMAIL;
 		WORDPRESS_PARENT_THEME          = props.WORDPRESS_PARENT_THEME;
@@ -275,7 +277,6 @@ function showPrompts() {
 		WORDPRESS_TEST_DB_HOST          = props.WORDPRESS_TEST_DB_HOST;
 		WORDPRESS_THEME                 = props.WORDPRESS_THEME;
 		WORDPRESS_TITLE                 = props.WORDPRESS_TITLE;
-		WP_TESTS_CONFIG_FILE_PATH       = WP_TESTS_CONFIG_FILE_PATH;
 		WORDPRESS_VERSION               = props.WORDPRESS_VERSION;
 		XDEBUG_IDEKEY                   = XDEBUG_IDEKEY;
 		XDEBUG_REMOTE_AUTOSTART         = XDEBUG_REMOTE_AUTOSTART;
@@ -319,6 +320,7 @@ function getDefaultTemplateData() {
 		PHPCS_FILE                      : PHPCS_FILE,
 		PHPCS_STANDARD                  : PHPCS_STANDARD,
 		PHPUNIT_EXCLUDE_GROUPS          : PHPUNIT_EXCLUDE_GROUPS,
+		PMC_PHPUNIT_BOOTSTRAP           : PMC_PHPUNIT_BOOTSTRAP;
 		PHP_VERSION                     : PHP_VERSION,
 		TEXT_DOMAIN                     : TEXT_DOMAIN,
 		WEB_ROOT                        : WEB_ROOT,
@@ -338,7 +340,6 @@ function getDefaultTemplateData() {
 		WORDPRESS_THEME                 : WORDPRESS_THEME,
 		WORDPRESS_TITLE                 : WORDPRESS_TITLE,
 		WORDPRESS_VERSION               : WORDPRESS_VERSION,
-		WP_TESTS_CONFIG_FILE_PATH       : WP_TESTS_CONFIG_FILE_PATH,
 		XDEBUG_IDEKEY                   : XDEBUG_IDEKEY,
 		XDEBUG_REMOTE_AUTOSTART         : XDEBUG_REMOTE_AUTOSTART,
 		XDEBUG_REMOTE_CONNECT_BACK      : XDEBUG_REMOTE_CONNECT_BACK,
