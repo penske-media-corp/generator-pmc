@@ -6,6 +6,11 @@
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
 >
+	<php>
+		<!--// These can be override via env variable //-->
+		<env name="VIP_GO_ENV" value="true" />
+		<env name="PMC_PHPUNIT_BOOTSTRAP" value="/var/www/html/wp-content/plugins/pmc-plugins/pmc-unit-test/bootstrap.php" />
+	</php>
 	<testsuites>
 		<testsuite name="<%= WORDPRESS_THEME %>">
 			<directory prefix="test-" suffix=".php">./tests/</directory>
@@ -13,10 +18,10 @@
 	</testsuites>
 	<filter>
 		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">.</directory>
+			<directory suffix=".php">./</directory>
 			<exclude>
-				<directory>./tests</directory>
-				<directory>./template-parts</directory>
+				<directory>./tests/</directory>
+				<directory>./template-parts/</directory>
 				<!--// Any other standard folder we want to excludes? //-->
 			</exclude>
 		</whitelist>
