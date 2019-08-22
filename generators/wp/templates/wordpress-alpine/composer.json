@@ -56,13 +56,13 @@
 	"extra": {
 		"phpcodesniffer-search-depth": 5,
 		"installer-paths": {
-			"<%= WORDPRESS_CACHE %>/wp-content/mu-plugins/{$name}/": [
+			"<%= CACHE_DIR %>/html/wp-content/mu-plugins/{$name}/": [
 				"type:wordpress-muplugin"
 			],
-			"<%= WORDPRESS_CACHE %>/wp-content/plugins/{$name}/": [
+			"<%= CACHE_DIR %>/html/wp-content/plugins/{$name}/": [
 				"type:wordpress-plugin"
 			],
-			"<%= WORDPRESS_CACHE %>/wp-content/themes/{$name}/": [
+			"<%= CACHE_DIR %>/html/wp-content/themes/{$name}/": [
 				"type:wordpress-theme" ],
 			"./vendor/pmc/dropins/{$name}/": [
 				"type:wordpress-dropin"

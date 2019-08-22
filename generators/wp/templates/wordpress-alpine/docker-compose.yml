@@ -21,8 +21,7 @@ services:
       - front
     restart: always
     volumes:
-      - "<%= WORDPRESS_CACHE %>:<%= WEB_ROOT %>:rw"
-      - "<%= WORDPRESS_CACHE %>/wp-content:<%= WEB_ROOT %>/wp-content:rw"
+      - "<%= CACHE_DIR %>/www:<%= WWW_DIR %>:rw"
       - "./:<%= WEB_ROOT/wp-content/themes/%<= WORDPRESS_THEME %>:rw"
     working_dir: "<%= WEB_ROOT %>"
 
@@ -53,7 +52,7 @@ services:
       - 443
     restart: always
     volumes:
-      - "<%= WORDPRESS_CACHE %>:<%= WEB_ROOT %>:rw"
+      - "<%= CACHE_DIR %>:<%= WWW_DIR %>:rw"
 
   cli:
     build:
@@ -71,8 +70,7 @@ services:
     networks:
       - back
     volumes:
-      - "<%= WORDPRESS_CACHE %>:<%= WEB_ROOT %>:rw"
-      - "<%= WORDPRESS_CACHE %>/wp-content:<%= WEB_ROOT %>/wp-content:rw"
+      - "<%= CACHE_DIR %>/www:<%= WWW_DIR %>:rw"
       - "./:<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_THEME %>:rw"
     working_dir: "<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_THEME %>"
 
@@ -117,8 +115,8 @@ services:
     restart: on-failure
     volumes:
       - "./:<%= WEB_ROOT %>"
-      - "./.cache/composer:<%= COMPOSER_CACHE_DIR %>"
-      - "./.cache/config/composer:<%= COMPOSER_HOME %>"
+      - "<%= CACHE_DIR %>/composer:<%= COMPOSER_CACHE_DIR %>"
+      - "<%= CACHE_DIR %>/config/composer:<%= COMPOSER_HOME %>"
     working_dir: "<%= WEB_ROOT %>"
 
   test-npm:
@@ -169,8 +167,7 @@ services:
       - test-back
     restart: on-failure
     volumes:
-      - "<%= WORDPRESS_CACHE %>:<%= WEB_ROOT %>:rw"
-      - "<%= WORDPRESS_CACHE %>/wp-content:<%= WEB_ROOT %>/wp-content:rw"
+      - "<%= CACHE_DIR %>/www:<%= WWW_DIR %>:rw"
       - "./:<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_THEME %>:rw"
     working_dir: "<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_THEME %>"
 
