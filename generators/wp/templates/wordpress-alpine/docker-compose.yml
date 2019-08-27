@@ -21,7 +21,7 @@ services:
       - front
     restart: always
     volumes:
-      - "<%= CACHE_DIR %>/www:<%= WWW_DIR %>:rw"
+      - "<%= CACHE_DIR %>/www:<%= WWW_ROOT %>:rw"
       - "./:<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_THEME %>:rw"
     working_dir: "<%= WEB_ROOT %>"
 
@@ -52,7 +52,7 @@ services:
       - 443
     restart: always
     volumes:
-      - "<%= CACHE_DIR %>:<%= WWW_DIR %>:rw"
+      - "<%= CACHE_DIR %>:<%= WWW_ROOT %>:rw"
 
   cli:
     build:
@@ -70,7 +70,7 @@ services:
     networks:
       - back
     volumes:
-      - "<%= CACHE_DIR %>/www:<%= WWW_DIR %>:rw"
+      - "<%= CACHE_DIR %>/www:<%= WWW_ROOT %>:rw"
       - "./:<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_THEME %>:rw"
     working_dir: "<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_THEME %>"
 
@@ -110,7 +110,7 @@ services:
       sh -c "composer install -vvv"
     env_file: docker-compose.env
     environment:
-      - <%- "COMPOSER_AUTH=$COMPOSER_AUTH %>"
+      - "COMPOSER_AUTH=$COMPOSER_AUTH"
     image: "composer:<%= COMPOSER_VERSION %>"
     restart: on-failure
     volumes:
@@ -158,16 +158,15 @@ services:
              && wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-run-codecov.sh | sh"
     depends_on:
       - test-db
-    environment:
-      - <%- "COMPOSER_AUTH=$COMPOSER_AUTH %>"
     env_file: docker-compose.env
     environment:
-      - <%- "CODECOV_AUTH_TOKEN=$CODECOV_AUTH_TOKEN %>"
+      - "COMPOSER_AUTH=$COMPOSER_AUTH"
+      - "CODECOV_AUTH_TOKEN=$CODECOV_AUTH_TOKEN"
     networks:
       - test-back
     restart: on-failure
     volumes:
-      - "<%= CACHE_DIR %>/www:<%= WWW_DIR %>:rw"
+      - "<%= CACHE_DIR %>/www:<%= WWW_ROOT %>:rw"
       - "./:<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_THEME %>:rw"
     working_dir: "<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_THEME %>"
 
