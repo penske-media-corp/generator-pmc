@@ -58,7 +58,6 @@ var WORDPRESS_PARENT_THEME          = 'pmc-core-v2';
 var WORDPRESS_TABLE_PREFIX          = 'wp_';
 var WORDPRESS_TEST_DB_HOST          = 'test-db';
 var WORDPRESS_THEME                 = process.cwd().split(path.sep).pop().toLowerCase();
-var WORDPRESS_THEME_NAMESPACE       = process.cwd().split(path.sep).pop().replace('pmc-', '').replace(/\-\d+/g,'').toLowerCase().replace(/(?<=\-)[^\-]|^./g, a=>a.toUpperCase()).replace('-','_');
 var WORDPRESS_TITLE                 = process.cwd().split(path.sep).pop().toLowerCase();
 var WORDPRESS_VERSION               = '5.2';
 var XDEBUG_IDEKEY                   = process.cwd().split(path.sep).pop().toLowerCase();
@@ -319,7 +318,7 @@ function getDefaultTemplateData() {
 		PHPCS_FILE                      : PHPCS_FILE,
 		PHPCS_STANDARD                  : PHPCS_STANDARD,
 		PHPUNIT_EXCLUDE_GROUPS          : PHPUNIT_EXCLUDE_GROUPS,
-		PMC_PHPUNIT_BOOTSTRAP           : PMC_PHPUNIT_BOOTSTRAP;
+		PMC_PHPUNIT_BOOTSTRAP           : PMC_PHPUNIT_BOOTSTRAP,
 		PHP_VERSION                     : PHP_VERSION,
 		TEXT_DOMAIN                     : TEXT_DOMAIN,
 		WWW_ROOT                        : WWW_ROOT,

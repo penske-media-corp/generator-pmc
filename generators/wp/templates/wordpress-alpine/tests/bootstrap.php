@@ -9,8 +9,4 @@ tests_add_filter('after_setup_theme', function () {
 
 });
 
-PMC\Unit_Test\Bootstrap::get_instance()->start([
-	'theme'      => getenv( 'WORDPRESS_THEME' ),
-	'namespace'  => getenv( 'WORDPRESS_THEME_NAMESPACE' ),
-	'tests_path' => __DIR__,
-]);
+PMC\Unit_Test\Bootstrap::get_instance()->start();

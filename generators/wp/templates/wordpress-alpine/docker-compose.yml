@@ -22,7 +22,7 @@ services:
     restart: always
     volumes:
       - "<%= CACHE_DIR %>/www:<%= WWW_DIR %>:rw"
-      - "./:<%= WEB_ROOT/wp-content/themes/%<= WORDPRESS_THEME %>:rw"
+      - "./:<%= WEB_ROOT %>/wp-content/themes/<%= WORDPRESS_THEME %>:rw"
     working_dir: "<%= WEB_ROOT %>"
 
   # nginx service only

@@ -1,0 +1,17 @@
+version: '3.5'
+
+services:
+
+  generator:
+    build:
+      context: .
+    working_dir: /srv/src
+    volumes:
+      - root:/root
+      - node_modules:/usr/local/lib/node_modules
+      - ./:/generator-pmc
+      - ~/:/srv/src
+
+volumes:
+  node_modules:
+  root:
