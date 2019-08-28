@@ -5,12 +5,7 @@
 	convertErrorsToExceptions="true"
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
->
-	<php>
-		<!--// These can be override via env variable //-->
-		<env name="VIP_GO_ENV" value="true" />
-		<env name="PMC_PHPUNIT_BOOTSTRAP" value="/var/www/html/wp-content/plugins/pmc-plugins/pmc-unit-test/bootstrap.php" />
-	</php>
+	>
 	<testsuites>
 		<testsuite name="<%= WORDPRESS_THEME %>">
 			<directory prefix="test-" suffix=".php">./tests/</directory>
@@ -18,14 +13,27 @@
 	</testsuites>
 	<filter>
 		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">./</directory>
+			<!--//
+				IMPORTANT: Do not include the root ./ folder as the code coverage will try to scan all sub-folders
+				Including .cache, vendor, etc... the exclude is then get remove after.
+				This will improve unit test coverage performance by avoid extra folders scan
+				Use file & include individual sub-folder instead, eg. ./inc, ./plugins
+				This is a flaw in phpunit coverage filter
+			//-->
+			<directory suffix=".php">./plugins/</directory>
+			<directory suffix=".php">./inc/</directory>
+			<file>functions.php</file>
 			<exclude>
-				<directory>./tests/</directory>
-				<directory>./template-parts/</directory>
-				<!--// Any other standard folder we want to excludes? //-->
+				<!--//
+					IMPORTANT: Do not add any exclude folder that wasn't cover by whitelist above
+					This will prevent code coverage from scanning the exclude folders
+					eg. do not add <directory>./tests/</directory>, etc.
+				//-->
+				<directory suffix="manifest.php">./plugins/</directory>
 			</exclude>
 		</whitelist>
 	</filter>
+
 	<logging>
 		<log type="coverage-text" target="php://stdout" showUncoveredFiles="true" />
 	</logging>

@@ -58,6 +58,7 @@ var WORDPRESS_PARENT_THEME          = 'pmc-core-v2';
 var WORDPRESS_TABLE_PREFIX          = 'wp_';
 var WORDPRESS_TEST_DB_HOST          = 'test-db';
 var WORDPRESS_THEME                 = process.cwd().split(path.sep).pop().toLowerCase();
+var WORDPRESS_THEME_PHP_NAMESPACE   = process.cwd().split(path.sep).pop().replace('pmc-', '').replace(/\-\d+/g,'').toLowerCase().replace(/(?<=\-)[^\-]|^./g, a=>a.toUpperCase()).replace('-','_');
 var WORDPRESS_TITLE                 = process.cwd().split(path.sep).pop().toLowerCase();
 var WORDPRESS_VERSION               = '5.2';
 var XDEBUG_IDEKEY                   = process.cwd().split(path.sep).pop().toLowerCase();
@@ -212,6 +213,11 @@ function showPrompts() {
 			default: PARATEST
 		}, {
 			type: 'input',
+			name: 'WORDPRESS_THEME_PHP_NAMESPACE',
+			message: 'Default WordPress theme php namespace',
+			default: WORDPRESS_THEME_PHP_NAMESPACE
+		}, {
+			type: 'input',
 			name: 'WORDPRESS_THEME',
 			message: 'Default WordPress theme',
 			default: WORDPRESS_THEME
@@ -274,6 +280,7 @@ function showPrompts() {
 		WORDPRESS_TABLE_PREFIX          = props.WORDPRESS_TABLE_PREFIX;
 		WORDPRESS_TEST_DB_HOST          = props.WORDPRESS_TEST_DB_HOST;
 		WORDPRESS_THEME                 = props.WORDPRESS_THEME;
+		WORDPRESS_THEME_PHP_NAMESPACE   = props.WORDPRESS_THEME_PHP_NAMESPACE;
 		WORDPRESS_TITLE                 = props.WORDPRESS_TITLE;
 		WORDPRESS_VERSION               = props.WORDPRESS_VERSION;
 		XDEBUG_IDEKEY                   = XDEBUG_IDEKEY;
@@ -336,6 +343,7 @@ function getDefaultTemplateData() {
 		WORDPRESS_TABLE_PREFIX          : WORDPRESS_TABLE_PREFIX,
 		WORDPRESS_TEST_DB_HOST          : WORDPRESS_TEST_DB_HOST,
 		WORDPRESS_THEME                 : WORDPRESS_THEME,
+		WORDPRESS_THEME_PHP_NAMESPACE   : WORDPRESS_THEME_PHP_NAMESPACE,
 		WORDPRESS_TITLE                 : WORDPRESS_TITLE,
 		WORDPRESS_VERSION               : WORDPRESS_VERSION,
 		XDEBUG_IDEKEY                   : XDEBUG_IDEKEY,
