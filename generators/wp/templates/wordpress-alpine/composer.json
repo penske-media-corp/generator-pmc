@@ -20,9 +20,9 @@
 			"type": "git",
 			"url": "https://bitbucket.org/penskemediacorp/pmc-plugins.git"
 		},
-		<% if(WORDPRESS_PARENT_THEME) { %>"pmc/pmc-core-v2": {
+		<% if(WORDPRESS_PARENT_THEME) { %>"pmc/<%= WORDPRESS_PARENT_THEME %>": {
 			"type": "git",
-			"url": "https://bitbucket.org/penskemediacorp/pmc-core-v2.git"
+			"url": "https://bitbucket.org/penskemediacorp/<%= WORDPRESS_PARENT_THEME %>.git"
 		},<% } %>
 		"pmc/vip-go-mu-plugins-built": {
 			"type": "package",
@@ -56,15 +56,15 @@
 	"extra": {
 		"phpcodesniffer-search-depth": 5,
 		"installer-paths": {
-			"./vendor/pmc/mu-plugins/{$name}/": [
+			"<%= WWW_ROOT %>/html/wp-content/mu-plugins/{$name}/": [
 				"type:wordpress-muplugin"
 			],
-			"./vendor/pmc/plugins/{$name}/": [
+			"<%= WWW_ROOT %>/html/wp-content/plugins/{$name}/": [
 				"type:wordpress-plugin"
 			],
-			"./vendor/pmc/themes/{$name}/": [
+			"<%= WWW_ROOT %>/html/wp-content/themes/{$name}/": [
 				"type:wordpress-theme" ],
-			"./vendor/pmc/dropins/{$name}/": [
+			"<%= WWW_ROOT %>/html/wp-content": [
 				"type:wordpress-dropin"
 			]
 		}

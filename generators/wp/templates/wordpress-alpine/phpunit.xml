@@ -5,7 +5,7 @@
 	convertErrorsToExceptions="true"
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
->
+	>
 	<testsuites>
 		<testsuite name="<%= WORDPRESS_THEME %>">
 			<directory prefix="test-" suffix=".php">./tests/</directory>
@@ -13,12 +13,27 @@
 	</testsuites>
 	<filter>
 		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory prefix="class-" suffix=".php">./inc</directory>
+			<!--//
+				IMPORTANT: Do not include the root ./ folder as the code coverage will try to scan all sub-folders
+				Including .cache, vendor, etc... the exclude is then get remove after.
+				This will improve unit test coverage performance by avoid extra folders scan
+				Use file & include individual sub-folder instead, eg. ./inc, ./plugins
+				This is a flaw in phpunit coverage filter
+			//-->
+			<directory suffix=".php">./plugins/</directory>
+			<directory suffix=".php">./inc/</directory>
+			<file>functions.php</file>
 			<exclude>
-				<directory suffix=".php">./tests</directory>
+				<!--//
+					IMPORTANT: Do not add any exclude folder that wasn't cover by whitelist above
+					This will prevent code coverage from scanning the exclude folders
+					eg. do not add <directory>./tests/</directory>, etc.
+				//-->
+				<directory suffix="manifest.php">./plugins/</directory>
 			</exclude>
 		</whitelist>
 	</filter>
+
 	<logging>
 		<log type="coverage-text" target="php://stdout" showUncoveredFiles="true" />
 	</logging>

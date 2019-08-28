@@ -12,9 +12,9 @@ var DockerHelper   = require('./dockerHelper.js');
 var error          = false;
 
 var APP_ENV                         = 'dev';
+var CACHE_DIR                       = './.cache'
 var COMPOSER_CACHE_DIR              = '/root/.cache/composer';
 var COMPOSER_HOME                   = '/root/.config/composer';
-var COMPOSER_VENDOR_DIR             = './vendor';
 var COMPOSER_VERSION                = '1.8.5';
 var DB_VERSION                      = '10.3';
 var DIFF_FILE                       = '/tmp/' + process.cwd().split(path.sep).pop().toLowerCase() + '.diff';
@@ -42,10 +42,11 @@ var PHPCS_STANDARD                  = 'PmcWpVip';
 var PHPUNIT_EXCLUDE_GROUPS          = 'pmc-phpunit-ignore-failed';
 var PHP_VERSION                     = '7.3';
 var TEXT_DOMAIN                     = process.cwd().split(path.sep).pop().toLowerCase();
-var WEB_ROOT                        = '/var/www/html';
+var WWW_ROOT                        = '/var/www';
+var WEB_ROOT                        = WWW_ROOT + '/html';
+var PMC_PHPUNIT_BOOTSTRAP           = WEB_ROOT + '/wp-content/plugins/pmc-plugins/pmc-unit-test/bootstrap.php';
 var WORDPRESS_ADMIN_PASSWORD        = 'wp';
 var WORDPRESS_ADMIN_USER            = 'wp';
-var WORDPRESS_CACHE                 = './.cache/wp';
 var WORDPRESS_COMPOSER_PACKAGE_TYPE = '';
 var WORDPRESS_DB_HOST               = 'db';
 var WORDPRESS_DB_NAME               = 'wp';
@@ -57,9 +58,9 @@ var WORDPRESS_PARENT_THEME          = 'pmc-core-v2';
 var WORDPRESS_TABLE_PREFIX          = 'wp_';
 var WORDPRESS_TEST_DB_HOST          = 'test-db';
 var WORDPRESS_THEME                 = process.cwd().split(path.sep).pop().toLowerCase();
+var WORDPRESS_THEME_PHP_NAMESPACE   = process.cwd().split(path.sep).pop().replace('pmc-', '').replace(/\-\d+/g,'').toLowerCase().replace(/(?<=\-)[^\-]|^./g, a=>a.toUpperCase()).replace('-','_');
 var WORDPRESS_TITLE                 = process.cwd().split(path.sep).pop().toLowerCase();
 var WORDPRESS_VERSION               = '5.2';
-var WP_TESTS_CONFIG_FILE_PATH       = '/var/www/html/wp-tests/tests/phpunit';
 var XDEBUG_IDEKEY                   = process.cwd().split(path.sep).pop().toLowerCase();
 var XDEBUG_REMOTE_AUTOSTART         = '1';
 var XDEBUG_REMOTE_CONNECT_BACK      = '0';
@@ -212,6 +213,11 @@ function showPrompts() {
 			default: PARATEST
 		}, {
 			type: 'input',
+			name: 'WORDPRESS_THEME_PHP_NAMESPACE',
+			message: 'Default WordPress theme php namespace',
+			default: WORDPRESS_THEME_PHP_NAMESPACE
+		}, {
+			type: 'input',
 			name: 'WORDPRESS_THEME',
 			message: 'Default WordPress theme',
 			default: WORDPRESS_THEME
@@ -231,7 +237,6 @@ function showPrompts() {
 		APP_ENV                         = props.APP_ENV;
 		COMPOSER_CACHE_DIR              = COMPOSER_CACHE_DIR;
 		COMPOSER_HOME                   = COMPOSER_HOME;
-		COMPOSER_VENDOR_DIR             = COMPOSER_VENDOR_DIR;
 		COMPOSER_VERSION                = COMPOSER_VERSION;
 		DB_VERSION                      = props.DB_VERSION;
 		DIFF_FILE                       = DIFF_FILE;
@@ -258,24 +263,25 @@ function showPrompts() {
 		MARIADB_PORT_NUMBER             = MARIADB_PORT_NUMBER;
 		PHP_VERSION                     = props.PHP_VERSION;
 		TEXT_DOMAIN                     = props.TEXT_DOMAIN;
+		WWW_ROOT                        = props.WWW_ROOT;
 		WEB_ROOT                        = props.WEB_ROOT;
 		WORDPRESS_ADMIN_PASSWORD        = props.WORDPRESS_ADMIN_PASSWORD;
 		WORDPRESS_ADMIN_USER            = props.WORDPRESS_ADMIN_USER;
-		WORDPRESS_CACHE                 = WORDPRESS_CACHE;
 		WORDPRESS_DB_HOST               = props.WORDPRESS_DB_HOST;
 		WORDPRESS_COMPOSER_PACKAGE_TYPE = props.WORDPRESS_COMPOSER_PACKAGE_TYPE;
 		WORDPRESS_DB_NAME               = props.WORDPRESS_DB_NAME;
 		WORDPRESS_DB_PASSWORD           = props.WORDPRESS_DB_PASSWORD;
 		WORDPRESS_DB_USER               = props.WORDPRESS_DB_USER;
 		PHPUNIT_EXCLUDE_GROUPS          = PHPUNIT_EXCLUDE_GROUPS;
+		PMC_PHPUNIT_BOOTSTRAP           = PMC_PHPUNIT_BOOTSTRAP;
 		WORDPRESS_DOMAIN                = props.WORDPRESS_DOMAIN;
 		WORDPRESS_EMAIL                 = props.WORDPRESS_EMAIL;
 		WORDPRESS_PARENT_THEME          = props.WORDPRESS_PARENT_THEME;
 		WORDPRESS_TABLE_PREFIX          = props.WORDPRESS_TABLE_PREFIX;
 		WORDPRESS_TEST_DB_HOST          = props.WORDPRESS_TEST_DB_HOST;
 		WORDPRESS_THEME                 = props.WORDPRESS_THEME;
+		WORDPRESS_THEME_PHP_NAMESPACE   = props.WORDPRESS_THEME_PHP_NAMESPACE;
 		WORDPRESS_TITLE                 = props.WORDPRESS_TITLE;
-		WP_TESTS_CONFIG_FILE_PATH       = WP_TESTS_CONFIG_FILE_PATH;
 		WORDPRESS_VERSION               = props.WORDPRESS_VERSION;
 		XDEBUG_IDEKEY                   = XDEBUG_IDEKEY;
 		XDEBUG_REMOTE_AUTOSTART         = XDEBUG_REMOTE_AUTOSTART;
@@ -291,9 +297,9 @@ function showPrompts() {
 function getDefaultTemplateData() {
 	return {
 		APP_ENV                         : APP_ENV,
+		CACHE_DIR                       : CACHE_DIR,
 		COMPOSER_CACHE_DIR              : COMPOSER_CACHE_DIR,
 		COMPOSER_HOME                   : COMPOSER_HOME,
-		COMPOSER_VENDOR_DIR             : COMPOSER_VENDOR_DIR,
 		MARIADB_HOST                    : MARIADB_HOST,
 		MARIADB_PORT_NUMBER             : MARIADB_PORT_NUMBER,
 		COMPOSER_VERSION                : COMPOSER_VERSION,
@@ -319,12 +325,13 @@ function getDefaultTemplateData() {
 		PHPCS_FILE                      : PHPCS_FILE,
 		PHPCS_STANDARD                  : PHPCS_STANDARD,
 		PHPUNIT_EXCLUDE_GROUPS          : PHPUNIT_EXCLUDE_GROUPS,
+		PMC_PHPUNIT_BOOTSTRAP           : PMC_PHPUNIT_BOOTSTRAP,
 		PHP_VERSION                     : PHP_VERSION,
 		TEXT_DOMAIN                     : TEXT_DOMAIN,
+		WWW_ROOT                        : WWW_ROOT,
 		WEB_ROOT                        : WEB_ROOT,
 		WORDPRESS_ADMIN_PASSWORD        : WORDPRESS_ADMIN_PASSWORD,
 		WORDPRESS_ADMIN_USER            : WORDPRESS_ADMIN_USER,
-		WORDPRESS_CACHE                 : WORDPRESS_CACHE,
 		WORDPRESS_DB_HOST               : WORDPRESS_DB_HOST,
 		WORDPRESS_COMPOSER_PACKAGE_TYPE : WORDPRESS_COMPOSER_PACKAGE_TYPE,
 		WORDPRESS_DB_NAME               : WORDPRESS_DB_NAME,
@@ -336,9 +343,9 @@ function getDefaultTemplateData() {
 		WORDPRESS_TABLE_PREFIX          : WORDPRESS_TABLE_PREFIX,
 		WORDPRESS_TEST_DB_HOST          : WORDPRESS_TEST_DB_HOST,
 		WORDPRESS_THEME                 : WORDPRESS_THEME,
+		WORDPRESS_THEME_PHP_NAMESPACE   : WORDPRESS_THEME_PHP_NAMESPACE,
 		WORDPRESS_TITLE                 : WORDPRESS_TITLE,
 		WORDPRESS_VERSION               : WORDPRESS_VERSION,
-		WP_TESTS_CONFIG_FILE_PATH       : WP_TESTS_CONFIG_FILE_PATH,
 		XDEBUG_IDEKEY                   : XDEBUG_IDEKEY,
 		XDEBUG_REMOTE_AUTOSTART         : XDEBUG_REMOTE_AUTOSTART,
 		XDEBUG_REMOTE_CONNECT_BACK      : XDEBUG_REMOTE_CONNECT_BACK,
