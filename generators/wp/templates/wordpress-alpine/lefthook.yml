@@ -1,0 +1,10 @@
+pre-commit:
+  parallel: true
+  commands:
+    build-npm:
+      run: docker-compose run --rm build-npm && git add .
+    test-npm:
+      run: docker-compose run --rm test-npm
+    test-php:
+      run: docker-compose run --rm test-php
+

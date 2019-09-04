@@ -6,6 +6,7 @@
 	"name": "<%= WORDPRESS_THEME %>",
 	"version": "1.0.0",
 	"devDependencies": {
+		"@arkweid/lefthook": "^0.6.3",
 		"eslint": "^5.16.0",
 		"eslint-config-wordpress": "latest",
 		"lint-diff": "^1.2.1",

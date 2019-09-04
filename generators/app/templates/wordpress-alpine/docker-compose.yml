@@ -41,6 +41,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:<%= "$WORDPRESS_DOMAIN" %>;"
+      - "traefik.docker.network=pmc-dev_default"
     links:
       - wp
     networks:
@@ -66,7 +67,11 @@ services:
         WORDPRESS_VERSION: <%= "$WORDPRESS_VERSION" %>
     command: >
       sh -c "wget -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/wp-cli/_ss-install-wp.sh | sh"
+    depends_on:
+      - wp
     env_file: .env
+    links:
+      - wp
     networks:
       - back
     volumes:
@@ -110,7 +115,7 @@ services:
 
   build-php:
     command: >
-      sh -c "composer install -vvv"
+      sh -c "wget -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-build-php.sh | sh"
     env_file: .env
     environment:
       - <%- "COMPOSER_AUTH=$COMPOSER_AUTH" %>
@@ -133,7 +138,7 @@ services:
         WEB_ROOT: <%= "$WEB_ROOT" %>
         WORDPRESS_VERSION: <%= "$WORDPRESS_VERSION" %>
     command: >
-      sh -c "wget -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/npm/_ss-run-npm-ci.sh | sh"
+      sh -c "wget -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/npm/_ss-test-npm.sh | sh"
     env_file: .env
     restart: on-failure
     volumes:
@@ -182,7 +187,7 @@ services:
     env_file: .env
     networks:
       - test-back
-    restart: always
+    restart: on-failure
     volumes:
       - <%- "$MYSQL_VOLUMES/test-db:/var/lib/mysql" %>
 
