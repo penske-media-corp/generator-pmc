@@ -42,6 +42,7 @@ var PHPCS_STANDARD                  = 'PmcWpVip';
 var PHPUNIT_EXCLUDE_GROUPS          = 'pmc-phpunit-ignore-failed';
 var PHP_VERSION                     = '7.3';
 var TEXT_DOMAIN                     = process.cwd().split(path.sep).pop().toLowerCase();
+var TRAEFIK_NETWORK                 = 'pmc-dev_default';
 var WEB_ROOT                        = '/var/www/html';
 var WORDPRESS_ADMIN_PASSWORD        = 'wp';
 var WORDPRESS_ADMIN_USER            = 'wp';
@@ -142,6 +143,11 @@ function showPrompts() {
 			name: 'TEXT_DOMAIN',
 			message: 'Theme text-domain?',
 			default: TEXT_DOMAIN
+		}, {
+			type: 'input',
+			name: 'TRAEFIK_NETWORK',
+			message: 'Traefik network name?',
+			default: TRAEFIK_NETWORK
 		}, {
 			type: 'input',
 			name: 'WEB_ROOT',
@@ -258,6 +264,7 @@ function showPrompts() {
 		MARIADB_PORT_NUMBER             = MARIADB_PORT_NUMBER;
 		PHP_VERSION                     = props.PHP_VERSION;
 		TEXT_DOMAIN                     = props.TEXT_DOMAIN;
+		TRAEFIK_NETWORK                 = props.TRAEFIK_NETWORK;
 		WEB_ROOT                        = props.WEB_ROOT;
 		WORDPRESS_ADMIN_PASSWORD        = props.WORDPRESS_ADMIN_PASSWORD;
 		WORDPRESS_ADMIN_USER            = props.WORDPRESS_ADMIN_USER;
@@ -321,6 +328,7 @@ function getDefaultTemplateData() {
 		PHPUNIT_EXCLUDE_GROUPS          : PHPUNIT_EXCLUDE_GROUPS,
 		PHP_VERSION                     : PHP_VERSION,
 		TEXT_DOMAIN                     : TEXT_DOMAIN,
+		TRAEFIK_NETWORK                 : TRAEFIK_NETWORK,
 		WEB_ROOT                        : WEB_ROOT,
 		WORDPRESS_ADMIN_PASSWORD        : WORDPRESS_ADMIN_PASSWORD,
 		WORDPRESS_ADMIN_USER            : WORDPRESS_ADMIN_USER,
