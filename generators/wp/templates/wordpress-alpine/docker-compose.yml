@@ -41,6 +41,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:<%= "$WORDPRESS_DOMAIN" %>;"
+      - "traefik.docker.network=pmc-dev_default"
     links:
       - wp
     networks:
