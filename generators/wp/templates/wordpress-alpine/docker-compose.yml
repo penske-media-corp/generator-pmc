@@ -70,6 +70,7 @@ services:
     env_file: .env
     networks:
       - back
+    restart: on-failure
     volumes:
       - "$WORDPRESS_CACHE:$WEB_ROOT:rw"
       - "./:$WEB_ROOT/wp-content/themes/$WORDPRESS_THEME:rw"
