@@ -47,7 +47,7 @@
 		}
 	},
 	"require": {
-		"composer/installers": "^1.6",
+		"composer/installers": "^1.7",
 		<% if(WORDPRESS_PARENT_THEME) { %> "pmc/<%= WORDPRESS_PARENT_THEME %>": "dev-master", <% } %>
 		"pmc/pmc-vip-go-plugins": "dev-master",
 		"pmc/vip-go-mu-plugins-built": "dev-master",
