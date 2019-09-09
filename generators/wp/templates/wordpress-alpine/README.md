@@ -46,6 +46,7 @@ wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-
 Critical files for CI/CD
 =============
 Any files pre/post-fixed with these extensions are related to maintaining a healthy application `.`, `.xml`, `.json`, `.yml`.
+
 <%= WORDPRESS_THEME %> generated on <%= new Date() %>
 
 Notes
