@@ -1,5 +1,4 @@
-<%= WORDPRESS_THEME %>
-########################################
+# <%= WORDPRESS_THEME %>
 
 WordPress theme for `<%= WORDPRESS_THEME %> <%= ORG_URL %>`
 
@@ -46,7 +45,9 @@ wget --no-cache -O - https://raw.githubusercontent.com/penske-media-corp/alpine-
 
 Critical files for CI/CD
 =============
-<%= WORDPRESS_THEME %>
+Any files pre/post-fixed with these extensions are related to maintaining a healthy application `.`, `.xml`, `.json`, `.yml`.
+<%= WORDPRESS_THEME %> generated on <%= new Date() %>
+
 Notes
 -----
 Add any additional notes that are app specific here
