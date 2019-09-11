@@ -1,8 +1,11 @@
-pre-commit:
-  parallel: true
+post-receive:
   commands:
     build-npm:
-      run: docker-compose run --rm build-npm && git add .
+      run: docker-compose up -d --force-recreate --remove-orphans
+
+pre-push:
+  parallel: true
+  commands:
     test-npm:
       run: docker-compose run --rm test-npm
     test-php:

@@ -19,6 +19,14 @@ Start up the app first by building the docker image:
 docker-compose up --build -d --force-recreate --remove-orphans
 ```
 
+Githooks are installed via lefthook at the project level. These will run automatically once npm has been setup.
+To bypass either pass `--no-verify` into your git command or create a `lefthook-local.yml` and ensure it's ignored in `.gitignore` this will allow you to define your own hooks locally and or bypass them entirely.
+
+Or run githooks directly via npx
+```sh
+npx lefthook run ...
+```
+
 Build the dependencies:
 ```sh
 docker-compose run --rm build-npm
