@@ -41,19 +41,19 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:<%= "$WORDPRESS_DOMAIN" %>;"
-      - "traefik.docker.network=pmc-dev_default"
+      - "traefik.docker.network=traefik"
     links:
       - wp
     networks:
       - back
       - front
-      - pmc-dev_default
+      - traefik
     ports:
       - 80
       - 443
     restart: always
     volumes:
-      - "$WORDPRESS_CACHE:$WEB_ROOT:rw"
+      - $WORDPRESS_CACHE:$WEB_ROOT:rw
 
   cli:
     build:
@@ -67,13 +67,17 @@ services:
         WORDPRESS_VERSION: <%= "$WORDPRESS_VERSION" %>
     command: >
       sh -c "wget -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/wp-cli/_ss-install-wp.sh | sh"
+    depends_on:
+      - wp
     env_file: .env
+    links:
+      - wp
     networks:
       - back
     restart: on-failure
     volumes:
       - "$WORDPRESS_CACHE:$WEB_ROOT:rw"
-      - "./:$WEB_ROOT/wp-content/themes/$WORDPRESS_THEME:rw"
+      - "$PWD:$WEB_ROOT/wp-content/themes/$WORDPRESS_THEME:rw"
       - "$COMPOSER_VENDOR_DIR/pmc/mu-plugins:$WEB_ROOT/wp-content/mu-plugins:rw"
       - "$COMPOSER_VENDOR_DIR/pmc/plugins:$WEB_ROOT/wp-content/plugins:rw"
       - "$COMPOSER_VENDOR_DIR/pmc/themes/$WORDPRESS_PARENT_THEME:$WEB_ROOT/wp-content/themes/$WORDPRESS_PARENT_THEME:rw"
@@ -81,7 +85,7 @@ services:
 
   db:
     env_file: .env
-    image: "mariadb:$DB_VERSION"
+    image: mariadb:$DB_VERSION
     networks:
       - back
     restart: always
@@ -92,6 +96,35 @@ services:
     image: "memcached:$MEMCACHED_VERSION-alpine"
     networks:
       - back
+
+  awscli:
+    image: tstrohmeier/awscli:3.7.2
+    environment:
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+    volumes:
+      - $WORDPRESS_CACHE:/srv
+    working_dir: /srv
+
+  phpmyadmin:
+    depends_on:
+      - db
+    environment:
+     - PMA_ARBITRARY=1
+    image: phpmyadmin/phpmyadmin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:$PHPMYADMIN_DOMAIN;"
+      - "traefik.docker.network=traefik"
+    networks:
+      - traefik
+      - back
+    restart: always
+    ports:
+     - 80
+     - 443
+    volumes:
+     - $PWD/.cache/sessions
 
   build-npm:
     build:
@@ -104,7 +137,7 @@ services:
         WEB_ROOT: <%= "$WEB_ROOT" %>
         WORDPRESS_VERSION: <%= "$WORDPRESS_VERSION" %>
     command: >
-      sh -c "yarn install --non-interactive --verbose"
+      sh -c "wget -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/npm/_ss-build-npm.sh | sh"
     restart: on-failure
     volumes:
       - "./:$WEB_ROOT"
@@ -112,16 +145,16 @@ services:
 
   build-php:
     command: >
-      sh -c "composer install -vvv"
+      sh -c "wget -O - https://raw.githubusercontent.com/penske-media-corp/alpine-wordpress/master/_ss/php/_ss-build-php.sh | sh"
     env_file: .env
     environment:
       - <%- "COMPOSER_AUTH=$COMPOSER_AUTH" %>
     image: "composer:$COMPOSER_VERSION"
     restart: on-failure
     volumes:
-      - "./:$WEB_ROOT"
-      - "./.cache/composer:$COMPOSER_CACHE_DIR"
-      - "./.cache/config/composer:$COMPOSER_HOME"
+      - "$PWD:$WEB_ROOT"
+      - "$PWD/.cache/composer:$COMPOSER_CACHE_DIR"
+      - "$PWD/.cache/config/composer:$COMPOSER_HOME"
     working_dir: "$WEB_ROOT"
 
   test-npm:
@@ -139,7 +172,7 @@ services:
     env_file: .env
     restart: on-failure
     volumes:
-      - "./:$WEB_ROOT"
+      - "$PWD:$WEB_ROOT"
     working_dir: "$WEB_ROOT"
 
   test-php:
@@ -167,7 +200,7 @@ services:
     restart: on-failure
     volumes:
       - "$WORDPRESS_CACHE:$WEB_ROOT:rw"
-      - "./:$WEB_ROOT/wp-content/themes/$WORDPRESS_THEME:rw"
+      - "$PWD:$WEB_ROOT/wp-content/themes/$WORDPRESS_THEME:rw"
       - "$COMPOSER_VENDOR_DIR/pmc/mu-plugins:$WEB_ROOT/wp-content/mu-plugins:rw"
       - "$COMPOSER_VENDOR_DIR/pmc/plugins:$WEB_ROOT/wp-content/plugins:rw"
       - "$COMPOSER_VENDOR_DIR/pmc/themes/$WORDPRESS_PARENT_THEME:$WEB_ROOT/wp-content/themes/$WORDPRESS_PARENT_THEME:rw"
@@ -178,13 +211,13 @@ services:
     env_file: .env
     networks:
       - test-back
-    restart: always
+    restart: on-failure
     volumes:
       - <%- "$MYSQL_VOLUMES/test-db:/var/lib/mysql" %>
 
 networks:
   back:
   front:
-  pmc-dev_default:
+  traefik:
     external: true
   test-back:
